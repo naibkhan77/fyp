@@ -19,7 +19,7 @@ const ViewDepartment = ({handleButtonClick}) => {
             fontSize: '1.2rem', 
             '&:hover': { backgroundColor: 'white', color: 'black' },
           }}
-        >
+        > 
           View Department
         </Button>
       </Grid>

@@ -23,7 +23,7 @@ const LoginForm = ({ onClose }) => {
     
             const token = response.data.token;
             if (token) {
-                localStorage.setItem('authToken', token);  // Store the token in localStorage
+                localStorage.setItem('token', token);  // Store the token in localStorage
                 console.log('Token stored successfully:', token);
                 handleLoginSuccess();  // Redirect after successful login
     

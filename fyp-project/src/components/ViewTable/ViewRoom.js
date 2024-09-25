@@ -12,7 +12,7 @@ const ViewRoom = ({ handleButtonClick }) => {
           onClick={() => handleButtonClick('View Rooms')}
           sx={{
             backgroundColor: 'black',
-            color: 'red',
+            color: 'white',
             padding: '10px 16px', 
             fontSize: '1.2rem',
             '&:hover': { backgroundColor: 'white', color: 'black' },

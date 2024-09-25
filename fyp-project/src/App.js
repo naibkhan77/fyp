@@ -15,7 +15,7 @@ import RoomForm from './components/Form/RoomForm';
 import RoomTable from './components/Form/RoomTable';
 import CourseForm from './components/Form/CourseForm';
 import CourseTable from './components/Form/CourseTable';
-import TeacherForm from './components/Form/TeacherForm';
+import TeacherForm from './components/Form/TeacherForm'
 import TeacherTable from './components/Form/TeacherTable';
 import DepartmentForm from './components/Form/DepartmentForm';
 import DepartmentTable from './components/Form/DepartmentTable';
@@ -55,7 +55,7 @@ const AppContent = () => {
         <Route path="/admin/view-courses" element={<CourseTable courses={[]} />} />
 
         <Route path="/admin/teacher-form" element={<TeacherForm />} />
-        <Route path="/admin/view-teacher" element={<TeacherTable tables={[]} />} />
+        <Route path="/admin/view-teacher" element={<TeacherTable teachers={[]} />} />
 
         <Route path="/admin/department-form" element={<DepartmentForm />} />
         <Route path="/admin/view-department" element={<DepartmentTable departments={[]} />} />

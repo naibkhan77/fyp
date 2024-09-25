@@ -9,8 +9,9 @@ const CourseTable = ({ courses }) => {
        <TableHead>
         <TableRow>
 
-          <TableCell>Course Code</TableCell>
+          <TableCell>Course Id</TableCell>
           <TableCell>Course Name</TableCell>
+          <TableCell>Course Code</TableCell>
           <TableCell>Credits</TableCell>
           <TableCell>Department Name</TableCell>
 
@@ -19,10 +20,11 @@ const CourseTable = ({ courses }) => {
        <TableBody>
         {courses.map((course, index) => (
           <TableRow key={index}>
+            <TableCell>{course.course_id}</TableCell>
+            <TableCell>{course.course_name}</TableCell>
             <TableCell>{course.course_code}</TableCell>
-            <TableCell>{course.course_Name}</TableCell>
             <TableCell>{course.credits}</TableCell>
-            <TableCell>{course.department_Name}</TableCell>
+            <TableCell>{course.department_name}</TableCell>
           </TableRow>
         ))}
        </TableBody>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppBar, Box, Button, Drawer, IconButton, List, ListItem, ListItemText, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { School as SchoolIcon, Menu as MenuIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 
 import ViewButtonsGrid from '../components/ViewTable/ViewButtonsGrid';
 
@@ -54,18 +54,37 @@ const Admin = () => {
   const [section, setSection] = useState([]);
   const [currentSession, setCurrentSession] = useState([]);
   const [offeredSubject, setOfferedSubject] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
+  
+
+  // Check if user is logged in based on local storage or token
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleLogout = () => {
-    navigate('/');
+  const handleLogin = () => {
+    // Simulate login action for testing purposes
+    localStorage.setItem('token', 'sampleToken');
+    setIsLoggedIn(true);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Clear authentication token
+    setIsLoggedIn(false); // Update login state
+    navigate('/'); // Redirect to home/login page
+  };
+
 
   const handleMenuItemClick = (item) => {
     setSelectedMenuItem(item.label);
@@ -115,10 +134,24 @@ const Admin = () => {
   };
 
   const handleAddDepartment = (values, { setSubmitting, resetForm }) => {
-    setDepartment([...department, values]);
-    resetForm();
-    setSubmitting(false);
-  };
+    const token = localStorage.getItem('token');
+    axios.post('http://localhost:3001/api/adminPanel/department/adddepartment', values, {
+        headers: {
+            'Content-Type': 'application/json',
+            token: token,
+        },
+    })
+    .then(response => {
+        setDepartment([...department, response.data]);
+        resetForm();
+    })
+    .catch(error => {
+        console.error('Error adding department:', error);
+        alert(error.response ? error.response.data : 'Error adding department.');
+    })
+    .finally(() => setSubmitting(false));
+};
+
 
   const handleAddSession = (values, { setSubmitting, resetForm }) => {
     setSession([...session, values]);
@@ -156,53 +189,75 @@ const Admin = () => {
     setSubmitting(false);
   };
 
-  const handleButtonClick = async (action) => {
+  const handleButtonClick = (action) => {
+    const token = localStorage.getItem('token');
+    console.log('Retrieved token:', token);
+  
+    if (!token) {
+      console.error('No authentication token found.');
+      return;
+    }
+  
     if (action === 'View Rooms') {
-      try {
-        // Retrieve token from local storage
-        const token = localStorage.getItem('authToken');
-        console.log('Retrieved token:', token); // Log token for debugging
-  
-        // Check if token exists
-        if (!token) {
-          console.error('No authentication token found.');
-          return;
-        }
-  
-        // Fetch rooms from the server
-        const response = await fetch('http://localhost:3001/api/adminPanel/rooms/allrooms', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Include the token in the header
-          },
+      axios.get('http://localhost:3001/api/adminPanel/rooms/allrooms', {
+        headers: {
+          token: token,
+        },
+      })
+        .then(response => {
+          const data = response.data;
+          setRooms(data);
+          setSelectedMenuItem('View Rooms'); // Set selected menu item
+        })
+        .catch(error => {
+          console.error('Error fetching rooms:', error);
         });
-  
-        // Check response status
-        if (!response.ok) {
-          if (response.status === 401) {
-            console.error('Unauthorized request - token may be invalid or expired.');
-            alert('Unauthorized request. Please log in again.');
-          } else {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return;
-        }
-  
-        // Parse response data
-        const data = await response.json();
-        setRooms(data); // Store the fetched rooms
-        rooms(true); // Toggle the view to show rooms
-      } catch (error) {
-        console.error('Error fetching rooms:', error);
-        alert('Failed to fetch rooms. Please try again.');
-      }
+    } else if (action === 'View Courses') {
+      axios.get('http://localhost:3001/api/adminPanel/courses/allcourses', {
+        headers: {
+          token: token,
+        },
+      })
+        .then(response => {
+          const data = response.data;
+          setCourses(data);
+          setSelectedMenuItem('View Courses'); // Set selected menu item
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+        });
+    } else if (action === 'View Teacher') {
+      axios.get('http://localhost:3001/api/adminPanel/teachers/allteachers', {
+        headers: {
+          token: token,
+        },
+      })
+        .then(response => {
+          const data = response.data;
+          setTeachers(data);
+          setSelectedMenuItem('View Teacher'); // Set selected menu item
+        })
+        .catch(error => {
+          console.error('Error fetching teachers:', error);
+        });
+    } else if (action === 'View Department') {
+      axios.get('http://localhost:3001/api/adminPanel/department/alldepartments', {
+        headers: {
+          token: token,
+        },
+      })
+        .then(response => { 
+          const data = response.data;
+          setCourses(data);
+          setSelectedMenuItem('View Department'); // Set selected menu item
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+        });
     }
   };
-  
-  
-  
 
+  // changes here  
   
   return (
     <>
@@ -217,62 +272,83 @@ const Admin = () => {
             <SchoolIcon />
             Islamia College
           </Typography>
-          <Button
-            color="inherit"
-            sx={{
-              backgroundColor: 'gold',
-              color: 'black',
-              '&:hover': { backgroundColor: 'darkgoldenrod' },
-            }}
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
+
+          {isLoggedIn ? (
+            <Button
+              color="inherit"
+              sx={{
+                backgroundColor: 'gold',
+                color: 'black',
+                '&:hover': { backgroundColor: 'darkgoldenrod' },
+              }}
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              color="inherit"
+              sx={{
+                backgroundColor: 'gold',
+                color: 'black',
+                '&:hover': { backgroundColor: 'darkgoldenrod' },
+              }}
+              onClick={handleLogin}
+            >
+              Login
+            </Button>
+          )}
+
         </Toolbar>
       </AppBar>
 
       <Box sx={{ display: 'flex' }}>
-        <Drawer
-          variant={isSmallScreen ? 'temporary' : 'permanent'}
-          open={isSmallScreen ? drawerOpen : true}
-          onClose={handleDrawerToggle}
-          sx={{
-            width: 240,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {
+       
+
+      {isLoggedIn && (
+          <Drawer
+            variant={isSmallScreen ? 'temporary' : 'permanent'}
+            open={isSmallScreen ? drawerOpen : true}
+            onClose={handleDrawerToggle}
+            sx={{
               width: 240,
-              boxSizing: 'border-box',
-              backgroundColor: 'black',
-              color: 'white',
-            },
-          }}
-        >
-          <List>
-            {menuItems.map((text) => (
-              <ListItem
-                button
-                key={text.label}
-                sx={{ '&:hover': { color: 'goldenrod' } }}
-                onClick={() => handleMenuItemClick(text)}
-              >
-                <ListItemText primary={text.label} />
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
+              flexShrink: 0,
+              [`& .MuiDrawer-paper`]: {
+                width: 240,
+                boxSizing: 'border-box',
+                backgroundColor: 'black',
+                color: 'white',
+              },
+            }}
+          >
+            <List>
+              {menuItems.map((text) => (
+                <ListItem
+                  button
+                  key={text.label}
+                  sx={{ '&:hover': { color: 'goldenrod' } }}
+                  onClick={() => handleMenuItemClick(text)}
+                >
+                  <ListItemText primary={text.label} />
+                </ListItem>
+              ))}
+            </List>
+          </Drawer> 
+      )}
 
         <Box component="main" sx={{ flexGrow: 1, p: 3, minHeight: '100vh' }}>
           <Typography variant="h4" sx={{ textAlign: 'center' }}>
-            Admin Panel
+            Admin Panel 
           </Typography>
 
           <ViewButtonsGrid handleButtonClick={handleButtonClick} />
 
           {selectedMenuItem === 'View Rooms' && (
-            <>
+            <> 
               <RoomTable rooms={rooms} onDeleteRoom={handleDeleteRoom} />
             </>
           )}
+
           {selectedMenuItem === 'Add Rooms' && <RoomForm onAddRoom={handleAddRoom} />}
           {selectedMenuItem === 'Delete Room' && (
             <>
@@ -286,11 +362,13 @@ const Admin = () => {
           {selectedMenuItem === 'View Courses' && courses.length > 0 && <CourseTable courses={courses} />}
           {selectedMenuItem === 'Add Course' && <CourseForm onAddCourse={handleAddCourse} />}
 
-          {selectedMenuItem === 'View Teacher' && teachers.length > 0 && <TeacherTable teachers={teachers} />}
+          {selectedMenuItem === 'View Teacher' && teachers.length > 0 && (
+            <TeacherTable teachers={teachers} />)}
           {selectedMenuItem === 'Add Teacher' && <TeacherForm onAddTeacher={handleAddTeacher} />}
-
-          {selectedMenuItem === 'View Department' && department.length > 0 && <DepartmentTable department={department} />}
+{/*  */}
+          {selectedMenuItem === 'View Department' && department && department.length > 0 && <DepartmentTable department={department} />}
           {selectedMenuItem === 'Add Department' && <DepartmentForm onAddDepartment={handleAddDepartment} />}
+
 
           {selectedMenuItem === 'View Session' && session.length > 0 && <SessionTable session={session} />}
           {selectedMenuItem === 'Add Session' && <SessionForm onAddSession={handleAddSession} />}
@@ -310,7 +388,6 @@ const Admin = () => {
           {selectedMenuItem === 'View Offered Subject' && offeredSubject.length > 0 && <OfferedSubjectTable offeredSubject={offeredSubject} />}
           {selectedMenuItem === 'Add Offered Subject' && <OfferedSubjectForm onAddOfferedSubject={handleAddOfferedSubject} />}
 
-         
         </Box>
       </Box>
     </>

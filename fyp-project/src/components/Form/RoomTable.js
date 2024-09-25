@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 
 const RoomTable = ({ rooms, onDeleteRoom }) => {
+  console.log('Rooms data:', rooms);
   return (
     <TableContainer component={Paper}>
       <Table>

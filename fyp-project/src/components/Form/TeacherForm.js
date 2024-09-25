@@ -1,99 +1,120 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, TextField, Typography, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Box, Button, TextField, Typography, MenuItem, Select, InputLabel, FormControl, FormHelperText } from '@mui/material';
 import axios from 'axios';
 
 const TeacherForm = () => {
-  const [departments, setDepartments] = useState([]);
+  const [departments, setDepartments] = useState([]); // Initialize departments as an empty array
+  const [loading, setLoading] = useState(true); // Initialize loading state
 
   // Fetch departments when the component mounts
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/adminPanel/teachers/getdepid');
-        setDepartments(response.data);
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3001/api/adminPanel/teachers/getdepid', {
+          headers: { token },
+        });
+        setDepartments(response.data); // Set the fetched data to departments
       } catch (error) {
         console.error('Error fetching departments:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchDepartments();
+    fetchDepartments(); // Call the function
   }, []);
+
 
   // Validation schema for Formik
   const validationSchema = Yup.object({
-    teacherName: Yup.string().required('Teacher Name is required'),
-    departmentName: Yup.string().required('Department Name is required'),
+    teacher_name: Yup.string().required('Teacher Name is required'),
+    department_name: Yup.string().required('Department Name is required'),
     designation: Yup.string().required('Designation is required'),
     email: Yup.string().required('Email is required').email('Invalid email format'),
   });
 
   // Handle form submission
-  const handleSubmit = (values, { setSubmitting, resetForm }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log('Form values:', values);
-    
-    // Prepare data for the API call
-    const formData = {
-      teacherName: values.teacherName, 
-      departmentId: values.departmentName, // Correcting departmentName to departmentId
-      designation: values.designation, 
-      email: values.email, 
-    }; 
+    const token = localStorage.getItem('token');
 
-    // Make API request using Axios
-    axios.post('http://localhost:3001/api/adminPanel/teachers/addteacher', formData)
-      .then(response => {
-        console.log('Teacher added successfully', response.data); 
-        resetForm(); 
-      })
-      .catch(error => {
-        console.error('There was an error adding the teacher:', error); 
-      })
-      .finally(() => {
-        setSubmitting(false); 
-      }); 
+    if (!token) {
+      console.error('No authentication token found.');
+      return;
+    }
+
+    try {
+      // API call to add a course
+      const response = await fetch('http://localhost:3001/api/adminPanel/teachers/addteacher', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify(values), // Sends form data including department_name
+      });
+
+      if (response.ok) {
+        console.log('Teacher added successfully');
+        resetForm(); // Reset form on success
+      } else {
+        console.error('Failed to add teacher');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <Formik
-      initialValues={{ teacherName: '', departmentName: '', designation: '', email: '' }}
+      initialValues={{ teacher_name: '', department_name: '', designation: '', email: '' }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting, handleChange, values }) => (
         <Form>
           <Box sx={{ maxWidth: 500, margin: '0 auto' }}>
             <Typography variant="h5" sx={{ mb: 3, mt: 3 }}>Add Teacher</Typography>
+            
             <Field
               as={TextField}
-              name="teacherName"
+              name="teacher_name"
               label="Teacher Name"
               fullWidth
               margin="normal"
-              error={touched.teacherName && !!errors.teacherName}
-              helperText={touched.teacherName && errors.teacherName}
+              error={touched.teacher_name && !!errors.teacher_name}
+              helperText={touched.teacher_name && errors.teacher_name}
             />
-            <FormControl fullWidth margin="normal" error={touched.departmentName && !!errors.departmentName}>
-              <InputLabel>Department Name</InputLabel>
-              <Field
-                name="departmentName" // Corrected from "department Name"
-                as={Select}
-                label="Department Name"
-                fullWidth
+
+              <FormControl fullWidth margin="normal" error={touched.department_name && !!errors.department_name}>
+              <InputLabel>Department</InputLabel>
+              <Select
+                name="department_name"
+                value={values.department_name}
+                onChange={handleChange}
+                label="Department"
+                disabled={loading} // Disable while loading data
               >
-                {departments.map((department) => (
-                  <MenuItem key={department.id} value={department.id}>
-                    {department.name}
-                  </MenuItem>
-                ))}
-              </Field>
-              {touched.departmentName && errors.departmentName && (
-                <Typography variant="body2" color="error">
-                  {errors.departmentName}
-                </Typography>
+                {loading ? (
+                  <MenuItem value="">Loading...</MenuItem> // Show loading option
+                ) : (
+                  departments.map((dept, index) => (
+                    <MenuItem key={index} value={dept.department_name}>
+                      {dept.department_name}
+                    </MenuItem>
+                  ))
+                )}
+              </Select>
+              {touched.department_name && errors.department_name && (
+                <FormHelperText>{errors.department_name}</FormHelperText>
               )}
             </FormControl>
+
             <Field
               as={TextField}
               name="designation"
@@ -103,6 +124,7 @@ const TeacherForm = () => {
               error={touched.designation && !!errors.designation}
               helperText={touched.designation && errors.designation}
             />
+
             <Field
               as={TextField}
               name="email"
@@ -112,21 +134,22 @@ const TeacherForm = () => {
               error={touched.email && !!errors.email}
               helperText={touched.email && errors.email}
             />
+
             <Button
               type="submit"
               variant="contained"
               color="primary"
-              disabled={isSubmitting}
-              sx={{ 
-                mt: 2, 
-                backgroundColor: 'black', 
+              disabled={isSubmitting || loading} // Disable the button during submitting or loading
+              sx={{
+                mt: 2,
+                backgroundColor: 'black',
                 '&:hover': {
-                  backgroundColor: 'black', 
-                  color: 'white'
-                }
+                  backgroundColor: 'black',
+                  color: 'white',
+                },
               }}
             >
-              Add Teacher
+              {isSubmitting ? 'Adding...' : 'Add Teacher'}
             </Button>
           </Box>
         </Form>

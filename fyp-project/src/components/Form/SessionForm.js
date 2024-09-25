@@ -1,23 +1,25 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, MenuItem, Select, FormControl, InputLabel, FormHelperText } from '@mui/material';
 
 const SessionForm = () => {
 
   // Validation schema for Formik
   const validationSchema = Yup.object({
-    session_Name: Yup.string().required('Session Name is required'),
+    session_name: Yup.string().required('Session Name is required'),
     batch: Yup.string().required('Batch is required'),
   });
 
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    const token = localStorage.getItem('token');
     try {
       const response = await fetch('http://localhost:3001/api/adminPanel/session/addsession', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          token: token
         },
         body: JSON.stringify(values),
       });
@@ -26,7 +28,7 @@ const SessionForm = () => {
         throw new Error('Network response was not ok');
       }
 
-      const data = await response.json();
+      const data = await response.json ();
       console.log('Session added successfully:', data);
       resetForm();
     } catch (error) {
@@ -38,23 +40,33 @@ const SessionForm = () => {
 
   return (
     <Formik
-      initialValues={{ session_Name: '', batch: '' }}
+      initialValues={{ session_name: '', batch: '' }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting, setFieldValue, values }) => ( // Access values here
         <Form>
           <Box sx={{ maxWidth: 500, margin: '0 auto' }}>
             <Typography variant="h5" sx={{ mb: 3, mt: 3 }}>Add Session</Typography>
-            <Field
-              as={TextField}
-              name="session_Name"
-              label="Session Name"
-              fullWidth
-              margin="normal"
-              error={touched.session_Name && !!errors.session_Name}
-              helperText={touched.session_Name && errors.session_Name}
-            />
+            
+            {/* Dropdown for session name */}
+            <FormControl fullWidth margin="normal" error={touched.session_name && !!errors.session_name}>
+              <InputLabel id="session-name-label">Session Name</InputLabel>
+              <Select
+                labelId="session-name-label"
+                name="session_name"
+                value={values.session_name} // Use values from Formik's state
+                onChange={(event) => setFieldValue("session_name", event.target.value)}
+              >
+                <MenuItem value="Spring">Spring</MenuItem>
+                <MenuItem value="Fall">Fall</MenuItem>
+              </Select>
+              {touched.session_name && errors.session_name && (
+                <FormHelperText>{errors.session_name}</FormHelperText>
+              )}
+            </FormControl>
+
+            {/* Batch text field */}
             <Field
               as={TextField}
               name="batch"
@@ -64,6 +76,7 @@ const SessionForm = () => {
               error={touched.batch && !!errors.batch}
               helperText={touched.batch && errors.batch}
             />
+            
             <Button
               type="submit"
               variant="contained"

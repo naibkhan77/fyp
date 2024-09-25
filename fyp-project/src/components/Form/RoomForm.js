@@ -6,8 +6,9 @@
           const RoomForm = () => {
             // Validation schema for Formik
             const validationSchema = Yup.object({
-              roomNumber: Yup.number().required('Room Number is required'),
+              room_number: Yup.string().required('Room Number is required'),
               capacity: Yup.number().required('Capacity is required').min(1, 'Capacity must be at least 1'),
+              department: Yup.string().required("department is required"),
               building: Yup.string().required('Building name is required'),
               is_lab: Yup.boolean().required('Is Lab is required'),
             });
@@ -15,6 +16,13 @@
             // Handle form submission
             const handleSubmit = async (values, { setSubmitting, resetForm }) => {
               console.log('Form values:', values);
+              const token = localStorage.getItem('token');  // hjgbhibhib
+              console.log('Retrieved token:', token); //ikjhuih
+            
+              if (!token) {
+                console.error('No authentication token found.');
+                return;
+              }  //khiuh
 
               try {
                 // API call to add a room
@@ -22,6 +30,7 @@
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
+                     token: token  
                   },
                   body: JSON.stringify(values),
                 });
@@ -41,7 +50,7 @@
 
             return (
               <Formik
-                initialValues={{ roomNumber: '', capacity: '', building: '', is_lab: '' }}
+                initialValues={{ room_number: '', capacity: '', department: '', building: '', is_lab: '' }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
               >
@@ -51,12 +60,12 @@
                       <Typography variant="h5" sx={{ mb: 3, mt: 3 }}>Add Room</Typography>
                       <Field
                         as={TextField}
-                        name="roomNumber"
-                        label="Room Number"
+                        name="room_number"
+                        label="room_number"
                         fullWidth
                         margin="normal"
-                        error={touched.roomNumber && !!errors.roomNumber}
-                        helperText={touched.roomNumber && errors.roomNumber}
+                        error={touched.room_number && !!errors.room_number}
+                        helperText={touched.room_number && errors.room_number}
                       />
                       <Field
                         as={TextField}
@@ -66,6 +75,15 @@
                         margin="normal"
                         error={touched.capacity && !!errors.capacity}
                         helperText={touched.capacity && errors.capacity}
+                      />
+                      <Field
+                        as={TextField}
+                        name="department"
+                        label="department"
+                        fullWidth
+                        margin="normal"
+                        error={touched.department && !!errors.department}
+                        helperText={touched.department && errors.department}
                       />
                       <Field
                         as={TextField}

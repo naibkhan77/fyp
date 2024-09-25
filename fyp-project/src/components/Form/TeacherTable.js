@@ -7,8 +7,9 @@ const TeacherTable = ({ teachers }) => {
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Teacher ID</TableCell>
             <TableCell>Teacher Name</TableCell>
-            <TableCell>Department ID</TableCell>
+            <TableCell>Department name</TableCell>
             <TableCell>Designation</TableCell>
             <TableCell>Email</TableCell>
           </TableRow>
@@ -16,8 +17,9 @@ const TeacherTable = ({ teachers }) => {
         <TableBody>
           {teachers.map((teacher, index) => (
             <TableRow key={index}>
-              <TableCell>{teacher.teacherName}</TableCell>
-              <TableCell>{teacher.departmentId}</TableCell>
+              <TableCell>{teacher.teacher_name}</TableCell>
+              <TableCell>{teacher.teacher_name}</TableCell>
+              <TableCell>{teacher.department_name}</TableCell>
               <TableCell>{teacher.designation}</TableCell>
               <TableCell>{teacher.email}</TableCell>
             </TableRow>
