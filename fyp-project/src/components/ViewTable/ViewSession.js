@@ -4,7 +4,7 @@ import { Event as SessionIcon } from '@mui/icons-material';
 
 const ViewSession = ({handleButtonClick}) => {
   return (
-    <>
+ 
 
     <Grid container spacing={2} justifyContent="center" alignItems="center" sx={{ mt: 4 }}>
       <Grid item>
@@ -25,7 +25,7 @@ const ViewSession = ({handleButtonClick}) => {
       </Grid>
     </Grid>
       
-    </>
+
   )
 }
 

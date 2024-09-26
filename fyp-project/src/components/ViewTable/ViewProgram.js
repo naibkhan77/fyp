@@ -4,7 +4,6 @@ import { School as ProgramIcon } from '@mui/icons-material';
 
 const ViewProgram = ({handleButtonClick}) => {
     return (
-        <>
 
     <Grid container spacing={2} justifyContent="center" alignItems="center" sx={{ mt: 4 }}>
       <Grid item>
@@ -25,7 +24,6 @@ const ViewProgram = ({handleButtonClick}) => {
       </Grid>
     </Grid>
 
-        </>
     )
 }
 

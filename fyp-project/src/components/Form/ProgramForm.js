@@ -1,68 +1,97 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import { FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField, Box, Button, Typography } from '@mui/material';
 import axios from 'axios';
-import { Box, Button, TextField, Typography, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 
 const ProgramForm = () => {
   // State to hold the department data
   const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fetch department data from API
   useEffect(() => {
-    axios.get('http://localhost:3001/api/adminPanel/programs/getids')
-      .then(response => {
-        setDepartments(response.data); // Assuming response.data is an array of department objects
-      })
-      .catch(error => {
+    const fetchDepartments = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3001/api/adminPanel/programs/getids', {
+          headers: { token },
+        });
+        setDepartments(response.data); // Set the fetched data to departments
+      } catch (error) {
         console.error('Error fetching departments:', error);
-      });
-  }, []); // Empty dependency array ensures this effect runs only once after the component mounts
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDepartments(); // Call the function
+  }, []);
 
   // Validation schema for Formik
   const validationSchema = Yup.object({
-    programName: Yup.string().required('Program Name is required'),
-    credits_required: Yup.string().required('Credits required'),
-    department_Name: Yup.string().required('Department Name is required'),
+    program_name: Yup.string().required('Program Name is required'),
+    credits_required: Yup.number().required('Credits required'),
+    department_name: Yup.string().required('Department Name is required'),
   });
 
   // Handle form submission
-  const handleSubmit = (values, { setSubmitting, resetForm }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log('Form values:', values);
+    const token = localStorage.getItem('token');
 
-    // Make an API request to submit the form data
-    axios.post('http://localhost:3001/api/adminPanel/programs/addprogram', values)
-      .then(response => {
-        console.log('Program added successfully:', response.data);
-        resetForm();
-      })
-      .catch(error => {
-        console.error('Error adding program:', error);
-      })
-      .finally(() => {
-        setSubmitting(false);
+    if (!token) {
+      console.error('No Token found');
+      return;
+    }
+
+    try {
+      // API call to add a program
+      const response = await fetch('http://localhost:3001/api/adminPanel/programs/addprogram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify(values), // Sends form data including department_name
       });
+
+      if (response.ok) {
+        console.log('Program added successfully');
+        resetForm(); // Reset form on success
+      } else {
+        console.error('Failed to add Program');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <Formik
-      initialValues={{ programName: '', credits_required: '', department_Name: '' }}
+      initialValues={{ program_name: '', credits_required: '', department_name: '' }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting, handleChange, values }) => (
         <Form>
           <Box sx={{ maxWidth: 500, margin: '0 auto' }}>
             <Typography variant="h5" sx={{ mb: 3, mt: 3 }}>Add Program</Typography>
+
+            {/* Program Name Input */}
             <Field
               as={TextField}
-              name="programName"
+              name="program_name"
               label="Program Name"
               fullWidth
               margin="normal"
-              error={touched.programName && !!errors.programName}
-              helperText={touched.programName && errors.programName}
+              error={touched.program_name && !!errors.program_name}
+              helperText={touched.program_name && errors.program_name}
             />
+
+            {/* Credits Required Input */}
             <Field
               as={TextField}
               name="credits_required"
@@ -72,26 +101,33 @@ const ProgramForm = () => {
               error={touched.credits_required && !!errors.credits_required}
               helperText={touched.credits_required && errors.credits_required}
             />
-            <FormControl fullWidth margin="normal" error={touched.department_Name && !!errors.department_Name}>
-              <InputLabel>Department Name</InputLabel>
-              <Field
-                name="department_Name"
-                as={Select}
-                label="Department Name"
-                fullWidth
+
+            {/* Department Dropdown */}
+            <FormControl fullWidth margin="normal" error={touched.department_name && !!errors.department_name}>
+              <InputLabel>Department</InputLabel>
+              <Select
+                name="department_name"
+                value={values.department_name}
+                onChange={handleChange}
+                label="Department"
+                disabled={loading} // Disable while loading data
               >
-                {departments.map(department => (
-                  <MenuItem key={department.id} value={department.name}>
-                    {department.name}
-                  </MenuItem>
-                ))}
-              </Field>
-              {touched.department_Name && errors.department_Name && (
-                <Typography variant="body2" color="error">
-                  {errors.department_Name}
-                </Typography>
+                {loading ? (
+                  <MenuItem value="">Loading...</MenuItem> // Show loading option
+                ) : (
+                  departments.map((dept, index) => (
+                    <MenuItem key={index} value={dept.department_name}>
+                      {dept.department_name}
+                    </MenuItem>
+                  ))
+                )}
+              </Select>
+              {touched.department_name && errors.department_name && (
+                <FormHelperText>{errors.department_name}</FormHelperText>
               )}
             </FormControl>
+
+            {/* Submit Button */}
             <Button
               type="submit"
               variant="contained"
@@ -102,11 +138,11 @@ const ProgramForm = () => {
                 backgroundColor: 'black',
                 '&:hover': {
                   backgroundColor: 'black',
-                  color: 'white'
-                }
+                  color: 'white',
+                },
               }}
             >
-              Add Program
+              {isSubmitting ? 'Submitting...' : 'Add Program'}
             </Button>
           </Box>
         </Form>

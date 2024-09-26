@@ -4,14 +4,13 @@ import {Person as TeacherIcon } from '@mui/icons-material';
 
 const ViewTeacher = ({handleButtonClick}) => {
     return (
-        <>
-
+        
     <Grid container spacing={2} justifyContent="center" alignItems="center" sx={{ mt: 4 }}>
       <Grid item>
         <Button
           variant="contained"
           startIcon={<TeacherIcon sx={{ fontSize: 30 }} />}
-          onClick={() => handleButtonClick('View Courses')}
+          onClick={() => handleButtonClick('View Teacher')}
           sx={{
             backgroundColor: 'black',
             color: 'white',
@@ -25,7 +24,7 @@ const ViewTeacher = ({handleButtonClick}) => {
       </Grid>
     </Grid>
 
-        </>
+      
     )
 }
 

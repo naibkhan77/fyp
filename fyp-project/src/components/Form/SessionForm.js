@@ -11,9 +11,17 @@ const SessionForm = () => {
     batch: Yup.string().required('Batch is required'),
   });
 
+
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    console.log('Form Values:', values);  // Log to inspect the values
     const token = localStorage.getItem('token');
+    
+    if (!token) {
+      console.error('No authentication token found');
+      return;
+    }
+  
     try {
       const response = await fetch('http://localhost:3001/api/adminPanel/session/addsession', {
         method: 'POST',
@@ -23,21 +31,22 @@ const SessionForm = () => {
         },
         body: JSON.stringify(values),
       });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+  
+      if (response.ok) {
+        console.log("Session added successfully");
+        resetForm();
+      } else {
+        console.error('Failed to add session');
       }
-
-      const data = await response.json ();
-      console.log('Session added successfully:', data);
-      resetForm();
     } catch (error) {
-      console.error('Error adding session:', error);
+      console.log('Error:', error);
     } finally {
       setSubmitting(false);
     }
   };
+  
 
+     
   return (
     <Formik
       initialValues={{ session_name: '', batch: '' }}

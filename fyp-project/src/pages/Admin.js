@@ -153,11 +153,25 @@ const Admin = () => {
 };
 
 
-  const handleAddSession = (values, { setSubmitting, resetForm }) => {
-    setSession([...session, values]);
-    resetForm();
-    setSubmitting(false);
-  };
+const handleAddSession = (values, { setSubmitting, resetForm }) => {
+  const token = localStorage.getItem('token');
+  axios.post(' http://localhost:3001/api/adminPanel/session/addsession', values, {
+      headers: {
+          'Content-Type': 'application/json',
+          token: token,
+      },
+  })
+  .then(response => {
+      setSession([...session, response.data]);
+      resetForm();
+  })
+  .catch(error => {
+      console.error('Error adding department:', error);
+      alert(error.response ? error.response.data : 'Error adding department.');
+  })
+  .finally(() => setSubmitting(false));
+};
+
 
   const handleAddProgram = (values, { setSubmitting, resetForm }) => {
     setProgram([...program, values]);
@@ -240,22 +254,52 @@ const Admin = () => {
         .catch(error => {
           console.error('Error fetching teachers:', error);
         });
-    } else if (action === 'View Department') {
+    }  else if (action === 'View Department') {
       axios.get('http://localhost:3001/api/adminPanel/department/alldepartments', {
         headers: {
           token: token,
         },
       })
-        .then(response => { 
+        .then(response => {
           const data = response.data;
-          setCourses(data);
+          setDepartment(data);
           setSelectedMenuItem('View Department'); // Set selected menu item
         })
         .catch(error => {
-          console.error('Error fetching courses:', error);
+          console.error('Error fetching Department:', error);
         });
-    }
-  };
+    }  else if (action === 'View Session') {
+      axios.get('http://localhost:3001/api/adminPanel/session/allsessions', {
+        headers: {
+          token: token,
+        },
+      })
+        .then(response => {
+          const data = response.data;
+          setSession(data);
+          setSelectedMenuItem('View Session'); // Set selected menu item
+        })
+        .catch(error => {
+          console.error('Error fetching Sessions:', error);
+        });
+  }   else if (action === 'View Program') {
+    axios.get(' http://localhost:3001/api/adminPanel/programs/allprograms', {
+      headers: {
+        token: token,
+      },
+    })
+      .then(response => {
+        const data = response.data;
+        setProgram(data);
+        setSelectedMenuItem('View Program'); // Set selected menu item
+      })
+      .catch(error => {
+        console.error('Error fetching Program:', error);
+      });
+}
+
+}
+
 
   // changes here  
   

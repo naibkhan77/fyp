@@ -1,33 +1,25 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
-const DepartmentTable = ({ departments }) => {
+const DepartmentTable = ({ department }) => {
     return (
-        <>
         <Table>
-        <TableHead> 
-          <TableRow>
-            <TableCell>Department Name</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {departments && departments.length > 0 ? (
-            departments.map((department, index) => (
-              <TableRow key={index}>
-                <TableCell>{department.department_name}</TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={1} align="center">
-                No departments available.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-        </>
-    )
+            <TableHead> 
+                <TableRow>
+                    <TableCell>Department ID</TableCell>
+                    <TableCell>Department Name</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {department?.map((department) => (  // Use optional chaining
+                    <TableRow key={department.department_id}>
+                        <TableCell>{department.department_id}</TableCell>
+                        <TableCell>{department.department_name}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    );
 }
 
 export default DepartmentTable;

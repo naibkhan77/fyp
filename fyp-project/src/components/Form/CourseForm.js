@@ -111,29 +111,29 @@ const CourseForm = () => {
             />
 
             {/* Department Dropdown */}
-            <FormControl fullWidth margin="normal" error={touched.department_name && !!errors.department_name}>
-              <InputLabel>Department</InputLabel>
-              <Select
-                name="department_name"
-                value={values.department_name}
-                onChange={handleChange}
-                label="Department"
-                disabled={loading} // Disable while loading data
-              >
-                {loading ? (
-                  <MenuItem value="">Loading...</MenuItem> // Show loading option
-                ) : (
-                  departments.map((dept, index) => (
-                    <MenuItem key={index} value={dept.department_name}>
-                      {dept.department_name}
-                    </MenuItem>
-                  ))
+              <FormControl fullWidth margin="normal" error={touched.department_name && !!errors.department_name}>
+                <InputLabel>Department</InputLabel>
+                <Select
+                  name="department_name"
+                  value={values.department_name}
+                  onChange={handleChange}
+                  label="Department"
+                  disabled={loading} // Disable while loading data
+                >
+                  {loading ? (
+                    <MenuItem value="">Loading...</MenuItem> // Show loading option
+                  ) : (
+                    departments.map((dept, index) => (
+                      <MenuItem key={index} value={dept.department_name}>
+                        {dept.department_name}
+                      </MenuItem>
+                    ))
+                  )}
+                </Select>
+                {touched.department_name && errors.department_name && (
+                  <FormHelperText>{errors.department_name}</FormHelperText>
                 )}
-              </Select>
-              {touched.department_name && errors.department_name && (
-                <FormHelperText>{errors.department_name}</FormHelperText>
-              )}
-            </FormControl>
+              </FormControl>
 
             <Button
               type="submit"
