@@ -9,7 +9,7 @@ const DepartmentForm = () => {
     department_name: Yup.string().required('Department Name is required'),
   });
 
-  // Handle form submission
+  // Handle form submission 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const token = localStorage.getItem('token'); // Retrieve the token
   

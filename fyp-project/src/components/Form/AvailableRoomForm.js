@@ -2,153 +2,199 @@ import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { Box, Button, Typography, MenuItem, Select, InputLabel, FormControl, TextField } from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+
+
 
 const AvailableRoomForm = () => {
   // State to hold the data for each dropdown
   const [springFallOptions, setSpringFallOptions] = useState([]);
   const [yearOptions, setYearOptions] = useState([]);
   const [roomNumberOptions, setRoomNumberOptions] = useState([]);
-  const [departmentOptions, setDepartmentOptions] = useState([]);
+  // const [departmentOptions, setDepartmentOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fetch data for dropdowns when the component mounts
   useEffect(() => {
-    // Fetch SpringFall and Year options
-    axios.get('http://localhost:3001/api/adminPanel/availableRooms/getcsid')
-      .then(response => {
-        // Assuming the response contains both SpringFall and Year options
-        setSpringFallOptions(response.data.springFallOptions);
-        setYearOptions(response.data.yearOptions);
-      })
-      .catch(error => console.error('Error fetching SpringFall and Year options:', error));
+    const fetchCS = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3001/api/adminPanel/availableRooms/getcsid', {
+          headers: { token },
+        });
+        setSpringFallOptions(response.data); // Set the fetched data to departments
+        setYearOptions(response.data) ; 
+      } catch (error) {
+        console.error('Error fetching springFall year:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Fetch Room Number and Department options
-    axios.get('http://localhost:3001/api/adminPanel/availableRooms/getroomids')
-      .then(response => {
-        setRoomNumberOptions(response.data.roomNumberOptions);
-        setDepartmentOptions(response.data.departmentOptions);
-      })
-      .catch(error => console.error('Error fetching Room Number and Department options:', error));
+    fetchCS(); // Call the function
   }, []);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3001/api/adminPanel/availableRooms/getroomids', {
+          headers: { token },
+        });
+        setRoomNumberOptions(response.data); // Set the fetched data to departments
+        // setDepartmentOptions(response.data);
+      } catch (error) {
+        console.error('Error fetching departments and rooms', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRooms(); // Call the function
+  }, []);
+
 
   // Validation schema for Formik
   const validationSchema = Yup.object({
-    SpringFall: Yup.string().required('SpringFall is required'),
-    Year: Yup.number().required('Year is required'),
-    Room_Number: Yup.number().required('Room_Number is required'),
-    Department: Yup.string().required('Department is required'),
+    springFall: Yup.string().required('SpringFall is required'),
+    year: Yup.number().required('Year is required'),
+    room_number: Yup.string().required('Room_Number is required'),
+    // department: Yup.string().required('Department is required'),
     start_time: Yup.number().required('Start time is required'),
     end_time: Yup.number().required('End time is required'),
   });
 
   // Handle form submission
-  const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    axios.post('http://localhost:3001/api/adminPanel/availableRooms/addavailablerooms', values)
-      .then(response => {
-        console.log('Available Rooms added successfully:', response.data);
-        resetForm();
-        setSubmitting(false);
-      })
-      .catch(error => {
-        console.error('Error adding Available Rooms:', error);
-        setSubmitting(false);
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    console.log('Form values', values);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No authentication token found.');
+      return;
+    }
+
+    try {
+      // API call to add a course
+      const response = await fetch('  http://localhost:3001/api/adminPanel/availableRooms/addavailablerooms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify(values), // Sends form data including department_name
       });
+
+      if (response.ok) {
+        console.log('Available Room  added successfully');
+        resetForm(); // Reset form on success
+      } else {
+        console.error('Failed to add Available Room');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <Formik
-      initialValues={{ SpringFall: '', Year: '', Room_Number: '', Department: '', start_time: '', end_time: '' }}
+      initialValues={{ springFall: '', year: '', room_number: '', start_time: '', end_time: '' }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({values, handleChange, errors, touched, isSubmitting}) => (
         <Form>
           <Box sx={{ maxWidth: 500, margin: '0 auto' }}>
             <Typography variant="h5" sx={{ mb: 3, mt: 3 }}>Add Available Rooms</Typography>
 
-            <FormControl fullWidth margin="normal" error={touched.SpringFall && !!errors.SpringFall}>
-              <InputLabel>SpringFall</InputLabel>
-              <Field
-                name="SpringFall"
-                as={Select}
-                label="SpringFall"
-                fullWidth
-              >
-                {springFallOptions.map(option => (
-                  <MenuItem key={option.id} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Field>
-              {touched.SpringFall && errors.SpringFall && (
-                <Typography variant="body2" color="error">
-                  {errors.SpringFall}
-                </Typography>
-              )}
-            </FormControl>
+            <FormControl fullWidth margin="normal" error={touched.springFall && !!errors.springFall}>
+                <InputLabel>SprinFall</InputLabel>
+                <Select
+                  name="springFall"
+                  value={values.springFall}
+                  onChange={handleChange}
+                  label="springFall"
+                  disabled={loading} // Disable while loading data
+                >
+                  {loading ? (
+                    <MenuItem value="">Loading...</MenuItem> // Show loading option
+                  ) : (
+                    springFallOptions.map((springfall, index) => (
+                      <MenuItem key={index} value={springfall.springFall}>
+                        {springfall.springFall}
+                      </MenuItem>
+                    ))
+                  )}
+                </Select>
+                {touched.springFall && errors.springFall && (
+                  <FormHelperText>{errors.springFall}</FormHelperText>
+                )}
+              </FormControl>
 
-            <FormControl fullWidth margin="normal" error={touched.Year && !!errors.Year}>
+            <FormControl fullWidth margin="normal" error={touched.year && !!errors.year}>
               <InputLabel>Year</InputLabel>
               <Field
-                name="Year"
+                name="year"
                 as={Select}
                 label="Year"
                 fullWidth
               >
-                {yearOptions.map(option => (
-                  <MenuItem key={option.id} value={option.value}>
-                    {option.label}
+                {yearOptions.map((Year, index) => (
+                  <MenuItem key={index} value={Year.year}>
+                    {Year.year}
                   </MenuItem>
-                ))}
+                )
+              )}
               </Field>
-              {touched.Year && errors.Year && (
+              {touched.year && errors.year && (
                 <Typography variant="body2" color="error">
-                  {errors.Year}
+                  {errors.year}
                 </Typography>
               )}
             </FormControl>
 
-            <FormControl fullWidth margin="normal" error={touched.Room_Number && !!errors.Room_Number}>
+            <FormControl fullWidth margin="normal" error={touched.room_number && !!errors.room_number}>
               <InputLabel>Room Number</InputLabel>
               <Field
-                name="Room_Number"
+                name="room_number"
                 as={Select}
                 label="Room Number"
                 fullWidth
               >
-                {roomNumberOptions.map(option => (
-                  <MenuItem key={option.id} value={option.value}>
-                    {option.label}
+                {roomNumberOptions.map((room, index) => (
+                  <MenuItem key={index} value={room.room_number}>
+                    {room.room_number}
                   </MenuItem>
                 ))}
               </Field>
-              {touched.Room_Number && errors.Room_Number && (
+              {touched.room_number && errors.room_number && (
                 <Typography variant="body2" color="error">
-                  {errors.Room_Number}
+                  {errors.room_number}
                 </Typography>
               )}
             </FormControl>
 
-            <FormControl fullWidth margin="normal" error={touched.Department && !!errors.Department}>
+            {/* <FormControl fullWidth margin="normal" error={touched.department && !!errors.department}>
               <InputLabel>Department</InputLabel>
               <Field
-                name="Department"
+                name="department"
                 as={Select}
                 label="Department"
                 fullWidth
               >
-                {departmentOptions.map(option => (
-                  <MenuItem key={option.id} value={option.value}>
-                    {option.label}
+                {departmentOptions.map((dept, index) => (
+                  <MenuItem key={index} value={dept.department}>
+                    {dept.department}
                   </MenuItem>
                 ))}
               </Field>
-              {touched.Department && errors.Department && (
+              {touched.department && errors.department && (
                 <Typography variant="body2" color="error">
-                  {errors.Department}
+                  {errors.department}
                 </Typography>
               )}
-            </FormControl>
+            </FormControl> */}
 
             <Field
               as={TextField}

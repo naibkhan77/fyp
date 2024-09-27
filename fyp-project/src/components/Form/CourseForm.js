@@ -67,7 +67,7 @@ const CourseForm = () => {
     } finally {
       setSubmitting(false);
     }
-  };
+ };
 
   return (
     <Formik

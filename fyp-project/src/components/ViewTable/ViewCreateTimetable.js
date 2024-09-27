@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Grid } from '@mui/material';
-import { Schedule as ScheduleIcon } from '@mui/icons-material'; // Assuming a timetable-related icon
+import { Schedule as ScheduleIcon } from '@mui/icons-material'; 
 
 const ViewCreateTimetable = ({ handleButtonClick }) => {
   return (

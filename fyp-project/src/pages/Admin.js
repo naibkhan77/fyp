@@ -27,6 +27,7 @@ import CurrentSessionTable from '../components/Form/CurrentSessionTable';
 import OfferedSubjectForm from '../components/Form/OfferedSubjectForm';
 import OfferedSubjectTable from '../components/Form/OfferedSubjectTable';
 
+
 const menuItems = [
   { label: 'Add Rooms', path: '/admin/add-room' },
   { label: 'Add Course', path: '/admin/add-course' },
@@ -203,6 +204,8 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
     setSubmitting(false);
   };
 
+  
+
   const handleButtonClick = (action) => {
     const token = localStorage.getItem('token');
     console.log('Retrieved token:', token);
@@ -296,9 +299,51 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
       .catch(error => {
         console.error('Error fetching Program:', error);
       });
-}
+}   else if (action === 'View AvailableRooms') {
+  axios.get(' http://localhost:3001/api/adminPanel/availableRooms/allavailablerooms', {
+    headers: {
+      token: token,
+    },
+  })
+    .then(response => {
+      const data = response.data;
+      setAvailableRoom(data);
+      setSelectedMenuItem('View AvailableRooms'); // Set selected menu item
+    })
+    .catch(error => {
+      console.error('Error fetching AvailableRooms:', error);
+    });
 
+   } else if (action === 'View Section') {
+      axios.get(' http://localhost:3001/api/adminPanel/section/allsections', {
+        headers: {
+          token: token,
+        },
+      })
+        .then(response => {
+          const data = response.data;
+          setSection(data);
+          setSelectedMenuItem('View Section'); // Set selected menu item
+        })
+        .catch(error => {
+          console.error('Error fetching Sections', error);
+        });
+  }  else if (action === 'View CurrentSession') {
+    axios.get('http://localhost:3001/api/adminPanel/semester/allsemesters', {
+      headers: {
+        token: token,
+      },
+    })
+      .then(response => {
+        const data = response.data;
+        setCurrentSession(data);
+        setSelectedMenuItem('View CurrentSession'); // Set selected menu item
+      })
+      .catch(error => {
+        console.error('Error fetching CurrentSessions', error);
+      });
 }
+  }
 
 
   // changes here  

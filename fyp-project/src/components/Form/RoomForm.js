@@ -94,6 +94,7 @@
                         error={touched.building && !!errors.building}
                         helperText={touched.building && errors.building}
                       />
+
                       <FormControl fullWidth margin="normal" error={touched.is_lab && !!errors.is_lab}>
                         <InputLabel>Is Lab</InputLabel>
                         <Field
@@ -111,6 +112,7 @@
                           </Typography>
                         )}
                       </FormControl>
+                      
                       <Button
                         type="submit"
                         variant="contained"

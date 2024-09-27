@@ -1,27 +1,32 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 
-const AvailableTable = ({availableRoom}) => {
+const AvailableTable = ({availableRooms}) => {
+  console.log('AvailableRooms data', availableRooms )
     return (
-        <>
+
+      <TableContainer component={Paper} >
         <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Available Room ID</TableCell>
             <TableCell>SpringFall</TableCell>
             <TableCell>Year</TableCell>
-            <TableCell>Room_Number</TableCell>
-            <TableCell>Department</TableCell>
+            <TableCell>Room_number</TableCell>
+            <TableCell>Building</TableCell>
             <TableCell>Start_Time</TableCell>
             <TableCell>End_Time</TableCell>
           </TableRow>
          </TableHead>
          <TableBody>
-          {availableRoom.map((availableRoom, index) => (
-            <TableRow key={index}>
+          {availableRooms.map((availableRoom) => (
+            <TableRow key={availableRoom.av_id}>
+              <TableCell>{availableRoom.av_id}</TableCell>
               <TableCell>{availableRoom.springFall}</TableCell>
               <TableCell>{availableRoom.year}</TableCell>
-              <TableCell>{availableRoom.room_Number}</TableCell>
+              <TableCell>{availableRoom.room_number}</TableCell>
+              <TableCell>{availableRoom.building}</TableCell>
               <TableCell>{availableRoom.department}</TableCell>
               <TableCell>{availableRoom.start_time}</TableCell>
               <TableCell>{availableRoom.end_time}</TableCell>
@@ -29,9 +34,9 @@ const AvailableTable = ({availableRoom}) => {
           ))}
          </TableBody>
         </Table>
+        </TableContainer>
 
-        </>
     )
 }
 
-export default AvailableTable
+export default AvailableTable;

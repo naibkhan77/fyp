@@ -2,22 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography, FormHelperText } from '@mui/material';
 
-const CurrentSessionForm = ({ handleAddCurrentSession }) => {
+const CurrentSessionForm = () => {
   const [batches, setBatches] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch data for Batches and Sessions when the component mounts
+  // Fetch data for both batches and sessions when the component mounts
   useEffect(() => {
     const fetchBatchesAndSessions = async () => {
       try {
-        const batchResponse = await axios.get('/api/adminPanel/semester/getsessionid');
-        const sessionResponse = await axios.get('/api/adminPanel/semester/getsessionid');
-        setBatches(batchResponse.data);
-        setSessions(sessionResponse.data);
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3001/api/adminPanel/semester/getsessionid', {
+          headers: { token },
+        });
+
+        const data = response.data;
+
+        // Extract unique sessions and batches from the response
+        const uniqueSessions = [...new Set(data.map(item => item.session_name))]; // Get unique session names
+        const uniqueBatches = [...new Set(data.map(item => item.batch))]; // Get unique batch names
+
+        setSessions(uniqueSessions);
+        setBatches(uniqueBatches);
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -28,19 +40,38 @@ const CurrentSessionForm = ({ handleAddCurrentSession }) => {
   const validationSchema = Yup.object({
     springFall: Yup.string().required('SpringFall is required'),
     batch: Yup.string().required('Batch is required'),
-    year: Yup.string().required('Year is required'),
-    session_Name: Yup.string().required('Session Name is required'),
+    year: Yup.number().required('Year is required'),
+    session_name: Yup.string().required('Session Name is required'),
   });
 
   // Handle form submission
   const handleCurrentSession = async (values, { setSubmitting, resetForm }) => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.error('No authentication token found.');
+      return;
+    }
+
     try {
-      await axios.post('http://localhost:3001/api/adminPanel/semester/addsemester', values);
-      console.log('Current session added successfully');
-      handleAddCurrentSession(values); // Call the prop function to handle the submission
-      resetForm();
+      // API call to add the session
+      const response = await fetch('http://localhost:3001/api/adminPanel/semester/addsemester', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        console.log('Current session added successfully');
+        resetForm(); // Reset form on success
+      } else {
+        console.error('Failed to add current session');
+      }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error:', error);
     } finally {
       setSubmitting(false);
     }
@@ -48,14 +79,15 @@ const CurrentSessionForm = ({ handleAddCurrentSession }) => {
 
   return (
     <Formik
-      initialValues={{ springFall: '', batch: '', year: '', session_Name: '' }}
+      initialValues={{ springFall: '', batch: '', year: '', session_name: '' }}
       validationSchema={validationSchema}
       onSubmit={handleCurrentSession}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting, handleChange, values }) => (
         <Form>
           <Box sx={{ maxWidth: 500, margin: '0 auto' }}>
             <Typography variant="h5" sx={{ mb: 3, mt: 3 }}>Add Current Session</Typography>
+            
             <Field
               as={TextField}
               name="springFall"
@@ -65,25 +97,37 @@ const CurrentSessionForm = ({ handleAddCurrentSession }) => {
               error={touched.springFall && !!errors.springFall}
               helperText={touched.springFall && errors.springFall}
             />
+
+            {/* Batch Dropdown */}
             <FormControl fullWidth margin="normal" error={touched.batch && !!errors.batch}>
               <InputLabel>Batch</InputLabel>
-              <Field
+              <Select
                 name="batch"
-                as={Select}
+                value={values.batch}
+                onChange={handleChange}
                 label="Batch"
+                disabled={loading}
               >
-                {batches.map((batch) => (
-                  <MenuItem key={batch.id} value={batch.id}>
-                    {batch.name}
-                  </MenuItem>
-                ))}
-              </Field>
+                {loading ? (
+                  <MenuItem value="">Loading...</MenuItem>
+                ) : (
+                  batches.length > 0 ? (
+                    batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch}>
+                        {batch} {/* Display batch value */}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem value="">No batches available</MenuItem>
+                  )
+                )}
+              </Select>
               {touched.batch && errors.batch && (
-                <Typography variant="body2" color="error">
-                  {errors.batch}
-                </Typography>
+                <FormHelperText>{errors.batch}</FormHelperText>
               )}
             </FormControl>
+
+            {/* Year Field */}
             <Field
               as={TextField}
               name="year"
@@ -93,25 +137,36 @@ const CurrentSessionForm = ({ handleAddCurrentSession }) => {
               error={touched.year && !!errors.year}
               helperText={touched.year && errors.year}
             />
-            <FormControl fullWidth margin="normal" error={touched.session_Name && !!errors.session_Name}>
+
+            {/* Session Name Dropdown */}
+            <FormControl fullWidth margin="normal" error={touched.session_name && !!errors.session_name}>
               <InputLabel>Session Name</InputLabel>
-              <Field
-                name="session_Name"
-                as={Select}
+              <Select
+                name="session_name"
+                value={values.session_name}
+                onChange={handleChange}
                 label="Session Name"
+                disabled={loading}
               >
-                {sessions.map((session) => (
-                  <MenuItem key={session.id} value={session.id}>
-                    {session.name}
-                  </MenuItem>
-                ))}
-              </Field>
-              {touched.session_Name && errors.session_Name && (
-                <Typography variant="body2" color="error">
-                  {errors.session_Name}
-                </Typography>
+                {loading ? (
+                  <MenuItem value="">Loading...</MenuItem>
+                ) : (
+                  sessions.length > 0 ? (
+                    sessions.map((session, index) => (
+                      <MenuItem key={index} value={session}>
+                        {session} {/* Display session value */}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem value="">No sessions available</MenuItem>
+                  )
+                )}
+              </Select>
+              {touched.session_name && errors.session_name && (
+                <FormHelperText>{errors.session_name}</FormHelperText>
               )}
             </FormControl>
+
             <Button
               type="submit"
               variant="contained"
@@ -126,7 +181,7 @@ const CurrentSessionForm = ({ handleAddCurrentSession }) => {
                 }
               }}
             >
-              Add Current Session
+              {isSubmitting ? 'Submitting...' : 'Add Current Session'}
             </Button>
           </Box>
         </Form>
