@@ -6,12 +6,12 @@ const TeacherTimetable = ({ TeacherTimetable }) => {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell>Program Name</TableCell>
-          <TableCell>Department Name</TableCell>
-          <TableCell>Section Name</TableCell>
-          <TableCell>Course Name</TableCell>
-          <TableCell>Day</TableCell>
-          <TableCell>Time</TableCell>
+          <TableCell style={{ fontWeight: 'bold' }}>Program Name</TableCell>
+          <TableCell style={{ fontWeight: 'bold' }}>Department Name</TableCell>
+          <TableCell style={{ fontWeight: 'bold' }}>Section Name</TableCell>
+          <TableCell style={{ fontWeight: 'bold' }}>Course Name</TableCell>
+          <TableCell style={{ fontWeight: 'bold' }}>Day</TableCell>
+          <TableCell style={{ fontWeight: 'bold' }}>Time</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

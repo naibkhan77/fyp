@@ -55,8 +55,12 @@ const AvailableRoomForm = () => {
     springFallYear: Yup.string().required('SpringFall and Year are required'),
     room_number: Yup.string().required('Room Number is required'),
     department: Yup.string().required('Department is required'),
-    start_time: Yup.string().required('Start time is required').matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 'Start time must be in HH:mm:ss format'),
-    end_time: Yup.string().required('End time is required').matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 'End time must be in HH:mm:ss format'),
+    start_time: Yup.string()
+      .required('Start time is required')
+      .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 'Start time must be in HH:mm:ss format'),
+    end_time: Yup.string()
+      .required('End time is required')
+      .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 'End time must be in HH:mm:ss format'),
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -102,20 +106,20 @@ const AvailableRoomForm = () => {
   };
 
   const incrementTime = (time, type) => {
-    const [hours, minutes, seconds] = time.split(':').map(Number);
+    const [hours] = time.split(':').map(Number); // Only destructure hours since minutes and seconds are not used
     let newTime;
 
     if (type === 'start') {
-      newTime = hours === 23 ? '00:00:00' : `${(hours + 1) % 24}:00:00`; // Increment by one hour
+      newTime = hours === 23 ? '00:00:00' : `${(hours + 1).toString().padStart(2, '0')}:00:00`; // Increment by one hour
       setStartTime(newTime);
     } else {
-      newTime = hours === 23 ? '00:00:00' : `${(hours + 1) % 24}:00:00`; // Increment by one hour
+      newTime = hours === 23 ? '00:00:00' : `${(hours + 1).toString().padStart(2, '0')}:00:00`; // Increment by one hour
       setEndTime(newTime);
     }
   };
 
   const decrementTime = (time, type) => {
-    const [hours, minutes, seconds] = time.split(':').map(Number);
+    const [hours] = time.split(':').map(Number); // Only destructure hours
     let newTime;
 
     if (type === 'start') {
@@ -215,7 +219,6 @@ const AvailableRoomForm = () => {
                 value={startTime}
                 error={touched.start_time && !!errors.start_time}
                 helperText={touched.start_time && errors.start_time}
-                placeholder={touched.start_time && errors.start_time ? errors.start_time : 'HH:mm:ss'}
                 onChange={(e) => setStartTime(e.target.value)}
               />
               <Button onClick={() => decrementTime(startTime, 'start')} variant="outlined" sx={{ marginLeft: 1 }}>-</Button>
@@ -233,28 +236,14 @@ const AvailableRoomForm = () => {
                 value={endTime}
                 error={touched.end_time && !!errors.end_time}
                 helperText={touched.end_time && errors.end_time}
-                placeholder={touched.end_time && errors.end_time ? errors.end_time : 'HH:mm:ss'}
                 onChange={(e) => setEndTime(e.target.value)}
               />
               <Button onClick={() => decrementTime(endTime, 'end')} variant="outlined" sx={{ marginLeft: 1 }}>-</Button>
               <Button onClick={() => incrementTime(endTime, 'end')} variant="outlined" sx={{ marginLeft: 1 }}>+</Button>
             </Box>
 
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting || loading} // Disable button when submitting or loading
-              sx={{
-                mt: 2,
-                backgroundColor: 'black',
-                '&:hover': {
-                  backgroundColor: 'black',
-                  color: 'white',
-                },
-              }}
-            >
-              {isSubmitting ? 'Submitting...' : 'Add AvailableRoom'}
+            <Button type="submit" variant="contained" color="primary" fullWidth disabled={isSubmitting} sx={{ mt: 3 }}>
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </Box>
         </Form>

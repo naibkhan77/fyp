@@ -6,7 +6,7 @@ const connection = require('../connection')
 
 allocation.post("/createtimetable", verifyToken, async (req, res) => {
     const { program_id, cs_id, department_id, section_id, teacher_id, av_id, os_id, session_id, time, day } = req.body;
-
+ 
     // Step 1: Create a string from the data fields
     // const dataString = `${program_id}-${cs_id}-${department_id}-${section_id}-${teacher_id}-${av_id}-${os_id}-${session_id}-${time}-${day}`;
 

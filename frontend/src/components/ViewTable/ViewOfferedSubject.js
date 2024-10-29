@@ -15,7 +15,7 @@ const ViewOfferedSubject = ({handleButtonClick}) => {
             sx={{
               backgroundColor: 'black',
               color: 'white',
-              padding: '10px 16px', 
+              padding: '15px 5px', 
               fontSize: '1.2rem', 
               '&:hover': { backgroundColor: 'white', color: 'black' },
             }}

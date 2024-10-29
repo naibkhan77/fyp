@@ -6,9 +6,9 @@ const SessionTable = ({ session = [] }) => {
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell>Session ID</TableCell>
-                    <TableCell>Session Name</TableCell>
-                    <TableCell>Batch</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Session ID</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Session Name</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Batch</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>

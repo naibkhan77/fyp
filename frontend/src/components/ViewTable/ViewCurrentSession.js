@@ -13,8 +13,10 @@ const ViewCurrentSession = ({ handleButtonClick }) => {
           sx={{
             backgroundColor: 'black',
             color: 'white',
-            padding: '10px 16px',
+            padding: '10px 16px 20px 16px',
             fontSize: '1.2rem',
+            marginLeft: 'auto', // Pushes the button to the left
+            marginRight: 'auto', // Centers the button horizontally
             '&:hover': { backgroundColor: 'white', color: 'black' },
           }}
         >

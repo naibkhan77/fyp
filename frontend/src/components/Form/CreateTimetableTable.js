@@ -7,19 +7,19 @@ const CreateTimetableTable = ({ timetable }) => {
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell>program Name</TableCell>
-                    <TableCell>springFall</TableCell>
-                    <TableCell>year</TableCell>
-                    <TableCell>department Name</TableCell>
-                    <TableCell>section Name</TableCell>
-                    <TableCell>Teacher Name</TableCell>
-                    <TableCell>Room Number</TableCell>
-                    <TableCell>Department</TableCell>
-                    <TableCell>Course Name</TableCell>
-                    <TableCell>session Name</TableCell>
-                    <TableCell>Batch</TableCell>
-                    <TableCell>Time</TableCell>
-                    <TableCell>Day</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>program Name</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>springFall</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>year</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>department Name</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>section Name</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Teacher Name</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Room Number</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Department</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Course Name</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>session Name</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Batch</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Time</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }}>Day</TableCell>
                     
                 </TableRow>
             </TableHead>

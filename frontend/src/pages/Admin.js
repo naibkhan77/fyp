@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { AppBar, Box, Button, Drawer, IconButton, List, ListItem, ListItemText, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { School as SchoolIcon, Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -28,6 +28,7 @@ import OfferedSubjectForm from '../components/Form/OfferedSubjectForm';
 import OfferedSubjectTable from '../components/Form/OfferedSubjectTable';
 import CreateTimeTableForm from '../components/Form/CreateTimeTableForm';
 import TeacherTableForm from '../components/Form/TeacherTableForm';
+import RegisterForm from '../components/RegistrationForm';
 
 
 const menuItems = [
@@ -58,20 +59,51 @@ const Admin = () => {
   const [section, setSection] = useState([]);
   const [currentSession, setCurrentSession] = useState([]);
   const [offeredSubject, setOfferedSubject] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isRegisterFormOpen, setIsRegisterFormOpen] = useState(false);
+
+
+  const roomTableRef = useRef(null);
+  const courseTableRef = useRef(null);
+  const teacherTableRef = useRef(null);
+  const departmentTableRef = useRef(null);
+  const sessionTableRef = useRef(null);
+  const programTableRef = useRef(null);
+  const availableRoomTableRef = useRef(null);
+  const sectionTableRef = useRef(null);
+  const currentSessionTableRef = useRef(null);
+  const offeredSubjectTableRef = useRef(null);
+
+  const addRoomFormRef = useRef(null);
+  const addCourseFormRef = useRef(null);
+  const addTeacherFormRef = useRef(null);
+  const addDepartmentRef = useRef(null);
+  const addSessionRef = useRef(null);
+  const addProgramRef = useRef(null);
+  const addAvailableRoomRef = useRef(null);
+  const addSectionRef = useRef(null);
+  const addCurrentSessionRef = useRef(null);
+  const addOfferedSubjectRef = useRef(null);
+  const createTimetableRef = useRef(null);
+  const teacherTableFormRef = useRef(null);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   
 
-  // Check if user is logged in based on local storage or token
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
     }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Clear authentication token
+    setIsLoggedIn(false); // Update login state
+    navigate('/'); // Redirect to home/login page
+  };
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -83,16 +115,28 @@ const Admin = () => {
     setIsLoggedIn(true);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token'); // Clear authentication token
-    setIsLoggedIn(false); // Update login state
-    navigate('/'); // Redirect to home/login page
+
+  const handleMenuItemClick = (text) => {
+    setSelectedMenuItem(text.label);
+    
+    // Close the sidebar if in small screen
+    if (isSmallScreen) {
+      setDrawerOpen(false);
+    }
+
+    // Scroll to the corresponding section if "Add Rooms" is clicked
+    if (text.label === 'Add Rooms') {
+      const addRoomFormElement = addRoomFormRef.current; // Reference to the Add Room Form
+      if (addRoomFormElement) {
+        addRoomFormElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
-
-  const handleMenuItemClick = (item) => {
-    setSelectedMenuItem(item.label);
+  const handleRegisterClick = () => {
+    setIsRegisterFormOpen(!isRegisterFormOpen);
   };
+  
 
   const handleAddRoom = (values, { setSubmitting, resetForm }) => {
     fetch('http://localhost:3001/api/adminPanel/rooms/addroom', {
@@ -145,7 +189,7 @@ const Admin = () => {
             token: token,
         },
     })
-    .then(response => {
+    .then(response => { 
         setDepartment([...department, response.data]);
         resetForm();
     })
@@ -207,7 +251,62 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
     setSubmitting(false);
   };
 
-  
+
+  // For View Table scrolling down 
+  useEffect(() => {
+    if (selectedMenuItem === 'View Rooms' && roomTableRef.current) {
+      roomTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Courses' && courseTableRef.current) {
+      courseTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Teacher' && teacherTableRef.current) {
+      teacherTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Department' && departmentTableRef.current) {
+      departmentTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Session' && sessionTableRef.current) {
+      sessionTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Program' && programTableRef.current) {
+      programTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Available Rooms' && availableRoomTableRef.current) {
+      availableRoomTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Section' && sectionTableRef.current) {
+      sectionTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Current Session' && currentSessionTableRef.current) {
+      currentSessionTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'View Offered Subject' && offeredSubjectTableRef.current) {
+      offeredSubjectTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedMenuItem]);
+
+
+// For Add From scrolling down  
+  useEffect(() => {
+    if (selectedMenuItem === 'Add Rooms' && addRoomFormRef.current) {
+      addRoomFormRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Course' && addCourseFormRef.current) {
+      addCourseFormRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Teacher' && addTeacherFormRef.current) {
+      addTeacherFormRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Department' && addDepartmentRef.current) {
+      addDepartmentRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Session' && addSessionRef.current) {
+      addSessionRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Program' && addProgramRef.current) {
+      addProgramRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Available Rooms' && addAvailableRoomRef.current) {
+      addAvailableRoomRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Section' && addSectionRef.current) {
+      addSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Current Session' && addCurrentSessionRef.current) {
+      addCurrentSessionRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Add Offered Subject' && addOfferedSubjectRef.current) {
+      addOfferedSubjectRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'Create Timetable' && createTimetableRef.current) {
+      createTimetableRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (selectedMenuItem === 'TeacherTableForm' && teacherTableFormRef.current) {
+      teacherTableFormRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedMenuItem]);
+
 
   const handleButtonClick = (action) => {
     const token = localStorage.getItem('token');
@@ -227,7 +326,7 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
         .then(response => {
           const data = response.data;
           setRooms(data);
-          setSelectedMenuItem('View Rooms'); // Set selected menu item
+          setSelectedMenuItem('View Rooms'); // Triggers scrolling after re-render
         })
         .catch(error => {
           console.error('Error fetching rooms:', error);
@@ -241,7 +340,7 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
         .then(response => {
           const data = response.data;
           setCourses(data);
-          setSelectedMenuItem('View Courses'); // Set selected menu item
+          setSelectedMenuItem('View Courses'); // Triggers scrolling after re-render
         })
         .catch(error => {
           console.error('Error fetching courses:', error);
@@ -255,12 +354,12 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
         .then(response => {
           const data = response.data;
           setTeachers(data);
-          setSelectedMenuItem('View Teacher'); // Set selected menu item
+          setSelectedMenuItem('View Teacher'); // Triggers scrolling after re-render
         })
         .catch(error => {
           console.error('Error fetching teachers:', error);
         });
-    }  else if (action === 'View Department') {
+    } else if (action === 'View Department') {
       axios.get('http://localhost:3001/api/adminPanel/department/alldepartments', {
         headers: {
           token: token,
@@ -269,12 +368,12 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
         .then(response => {
           const data = response.data;
           setDepartment(data);
-          setSelectedMenuItem('View Department'); // Set selected menu item
+          setSelectedMenuItem('View Department'); // Triggers scrolling after re-render
         })
         .catch(error => {
-          console.error('Error fetching Department:', error);
+          console.error('Error fetching departments:', error);
         });
-    }  else if (action === 'View Session') {
+    } else if (action === 'View Session') {
       axios.get('http://localhost:3001/api/adminPanel/session/allsessions', {
         headers: {
           token: token,
@@ -283,43 +382,41 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
         .then(response => {
           const data = response.data;
           setSession(data);
-          setSelectedMenuItem('View Session'); // Set selected menu item
+          setSelectedMenuItem('View Session'); // Triggers scrolling after re-render
         })
         .catch(error => {
-          console.error('Error fetching Sessions:', error);
+          console.error('Error fetching sessions:', error);
         });
-  }   else if (action === 'View Program') {
-    axios.get(' http://localhost:3001/api/adminPanel/programs/allprograms', {
-      headers: {
-        token: token,
-      },
-    })
-      .then(response => {
-        const data = response.data;
-        setProgram(data);
-        setSelectedMenuItem('View Program'); // Set selected menu item
+    } else if (action === 'View Program') {
+      axios.get('http://localhost:3001/api/adminPanel/programs/allprograms', {
+        headers: {
+          token: token,
+        },
       })
-      .catch(error => {
-        console.error('Error fetching Program:', error);
-      });
-        
-}   else if (action === 'View AvailableRooms') {
-  axios.get(' http://localhost:3001/api/adminPanel/availableRooms/allavailablerooms', {
-    headers: {
-      token: token,
-    },
-  })
-    .then(response => {
-      const data = response.data;
-      setAvailableRoom(data);
-      setSelectedMenuItem('View Available Rooms'); // Set selected menu item
-    })
-    .catch(error => {
-      console.error('Error fetching AvailableRooms:', error);
-    });
-
-   } else if (action === 'View Section') {
-      axios.get(' http://localhost:3001/api/adminPanel/section/allsections', {
+        .then(response => {
+          const data = response.data;
+          setProgram(data);
+          setSelectedMenuItem('View Program'); // Triggers scrolling after re-render
+        })
+        .catch(error => {
+          console.error('Error fetching programs:', error);
+        });
+    } else if (action === 'View AvailableRooms') {
+      axios.get('http://localhost:3001/api/adminPanel/availableRooms/allavailablerooms', {
+        headers: {
+          token: token,
+        },
+      })
+        .then(response => {
+          const data = response.data;
+          setAvailableRoom(data);
+          setSelectedMenuItem('View Available Rooms'); // Triggers scrolling after re-render
+        })
+        .catch(error => {
+          console.error('Error fetching available rooms:', error);
+        });
+    } else if (action === 'View Section') {
+      axios.get('http://localhost:3001/api/adminPanel/section/allsections', {
         headers: {
           token: token,
         },
@@ -327,65 +424,44 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
         .then(response => {
           const data = response.data;
           setSection(data);
-          setSelectedMenuItem('View Section'); // Set selected menu item
+          setSelectedMenuItem('View Section'); // Triggers scrolling after re-render
         })
         .catch(error => {
-          console.error('Error fetching Sections', error);
+          console.error('Error fetching sections:', error);
         });
-
-  }  else if (action === 'View CurrentSession') {
-    axios.get('http://localhost:3001/api/adminPanel/semester/allsemesters', {
+    } else if (action === 'View CurrentSession') {
+      axios.get('http://localhost:3001/api/adminPanel/semester/allsemesters', {
         headers: {
-            token: token,
-        },
-    })
-    .then(response => {
-        console.log('API response:', response.data); // Log the response
-        const data = response.data;
-        setCurrentSession(data); // Set state with the fetched data
-        console.log('current session data:', data)
-        setSelectedMenuItem('View Current Session'); // Set selected menu item
-    })
-    .catch(error => {
-        console.error('Error fetching CurrentSessions:', error.response ? error.response.data : error.message);
-    });
-
-
-}    else if (action === 'View OfferedSubject') {
-  axios.get('http://localhost:3001/api/adminPanel/offeredsubjects/allofferedsubjects', {
-      headers: {
           token: token,
-      },
-  })
-  .then(response => {
-      console.log('API response:', response.data); // Log the response
-      const data = response.data;
-      setOfferedSubject(data); // Set state with the fetched data
-      console.log('Offered Subjects data:', data)
-      setSelectedMenuItem('View Offered Subject'); // Set selected menu item
-  })
-  .catch(error => {
-      console.error('Error fetching OfferedSubjects:', error.response ? error.response.data : error.message);
-  }); 
-// }   else if(action === 'ViewCreateTimetable') {
-//   axios.get('', {
-    
-//   })
-//   .then(response => {
-//     const data = response.data;
-//     CreateTimeTableForm(data);
-//     // setSelectedMenuItem(ViewCreateTimetable);
-//   })
-//   .catch(error => {
-//     console.error('Error fetching Create Timetable', error);
-//   })
-// }
-
-  }
-}
+        },
+      })
+        .then(response => {
+          const data = response.data;
+          setCurrentSession(data);
+          setSelectedMenuItem('View Current Session'); // Triggers scrolling after re-render
+        })
+        .catch(error => {
+          console.error('Error fetching current session:', error);
+        });
+    } else if (action === 'View OfferedSubject') {
+      axios.get('http://localhost:3001/api/adminPanel/offeredsubjects/allofferedsubjects', {
+        headers: {
+          token: token,
+        },
+      })
+        .then(response => {
+          const data = response.data;
+          setOfferedSubject(data);
+          setSelectedMenuItem('View Offered Subject'); // Triggers scrolling after re-render
+        })
+        .catch(error => {
+          console.error('Error fetching offered subjects:', error);
+        });
+    }
+  };
 
 
-  // changes here  
+  // changes here   
   
   return (
     <>
@@ -396,11 +472,27 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" color="goldenrod" component="div" sx={{ flexGrow: 1 }}>
-            <SchoolIcon />
-            Islamia College
+          <Typography variant="h5" color="goldenrod" component="div" sx={{ flexGrow: 1 }}>
+            
+           
           </Typography>
 
+          {/* Register Admin Button */}
+          {isLoggedIn && (
+            <Button
+              color="inherit"
+              sx={{
+                backgroundColor: 'gold',
+                color: 'black',
+                marginRight: '10px',
+                '&:hover': { backgroundColor: 'darkgoldenrod' },
+              }}
+              onClick={handleRegisterClick}
+            >
+              Registeration
+            </Button>
+          )}
+  
           {isLoggedIn ? (
             <Button
               color="inherit"
@@ -409,7 +501,7 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
                 color: 'black',
                 '&:hover': { backgroundColor: 'darkgoldenrod' },
               }}
-              onClick={handleLogout}
+              onClick={handleLogout} // Correctly linked to the logout function
             >
               Logout
             </Button>
@@ -421,19 +513,17 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
                 color: 'black',
                 '&:hover': { backgroundColor: 'darkgoldenrod' },
               }}
-              onClick={handleLogin}
+              onClick={handleLogin} // Simulated login for testing (remove when implementing real login)
             >
               Login
             </Button>
           )}
-
         </Toolbar>
       </AppBar>
-
-      <Box sx={{ display: 'flex' }}>
-       
-
-      {isLoggedIn && (
+  
+      <Box sx={{ display: 'flex', overflow: 'hidden' }}>
+        {isLoggedIn && (
+          <Box >
           <Drawer
             variant={isSmallScreen ? 'temporary' : 'permanent'}
             open={isSmallScreen ? drawerOpen : true}
@@ -446,10 +536,12 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
                 boxSizing: 'border-box',
                 backgroundColor: 'black',
                 color: 'white',
+                pt: '100px', // Adjust this value to match the AppBar height
+                overflow: 'hidden', // Prevent scrolling
               },
             }}
           >
-            <List>
+            <List >                         
               {menuItems.map((text) => (
                 <ListItem
                   button
@@ -461,71 +553,99 @@ const handleAddSession = (values, { setSubmitting, resetForm }) => {
                 </ListItem>
               ))}
             </List>
-          </Drawer> 
-      )}
+          </Drawer>
+        </Box>
+        )}
 
-        <Box component="main" sx={{ flexGrow: 1, p: 3, minHeight: '100vh' }}>
+       {/* Main content Area  */}
+        <Box component="main" sx={{ flexGrow: 1, p: 3, overflow: 'hidden', minHeight: '100vh', display: 'flex',flexDirection: 'column' }}>
           <Typography variant="h4" sx={{ textAlign: 'center' }}>
             Admin Panel 
           </Typography>
 
+          {/* Conditionally Render the Register Form */}
+          {isRegisterFormOpen && <RegisterForm onClose={() => setIsRegisterFormOpen(false)} />}
+  
           <ViewButtonsGrid handleButtonClick={handleButtonClick} />
+  
+      {/* Conditional Rendering Based on Selected Menu Item */}
+      <div ref={roomTableRef} />
+      {selectedMenuItem === 'View Rooms' && <RoomTable rooms={rooms} onDeleteRoom={handleDeleteRoom} />}
 
-          {selectedMenuItem === 'View Rooms' && (
-            <> 
-              <RoomTable rooms={rooms} onDeleteRoom={handleDeleteRoom} />
-            </>
-          )}
+      <div ref={addRoomFormRef} />
+      {selectedMenuItem === 'Add Rooms' && <RoomForm onAddRoom={handleAddRoom} />}
+      {selectedMenuItem === 'Delete Room' && (
+        <>
+          <Typography variant="h6" sx={{ textAlign: 'center', mt: 4, mb: 2 }}>
+            Select a room to delete
+          </Typography>
+          <RoomTable rooms={rooms} onDeleteRoom={handleDeleteRoom} />
+        </>
+      )}
 
-          {selectedMenuItem === 'Add Rooms' && <RoomForm onAddRoom={handleAddRoom} />}
-          {selectedMenuItem === 'Delete Room' && (
-            <>
-              <Typography variant="h6" sx={{ textAlign: 'center', mt: 4, mb: 2 }}>
-                Select a room to delete
-              </Typography>
-              <RoomTable rooms={rooms} onDeleteRoom={handleDeleteRoom} />
-            </>
-          )}
-
-          {selectedMenuItem === 'View Courses' && courses.length > 0 && <CourseTable courses={courses} />}
-          {selectedMenuItem === 'Add Course' && <CourseForm onAddCourse={handleAddCourse} />}
-
-          {selectedMenuItem === 'View Teacher' && teachers.length > 0 && (
-            <TeacherTable teachers={teachers} />)}
-          {selectedMenuItem === 'Add Teacher' && <TeacherForm onAddTeacher={handleAddTeacher} />}
-{/*  */}
-          {selectedMenuItem === 'View Department' && department && department.length > 0 && <DepartmentTable department={department} />}
-          {selectedMenuItem === 'Add Department' && <DepartmentForm onAddDepartment={handleAddDepartment} />}
+      <div ref={courseTableRef} />
+      {selectedMenuItem === 'View Courses' && courses.length > 0 && (
+        <CourseTable courses={courses} />
+      )}
+      <div ref={addCourseFormRef} />
+      {selectedMenuItem === 'Add Course' && <CourseForm onAddCourse={handleAddCourse} />}
 
 
-          {selectedMenuItem === 'View Session' && session.length > 0 && <SessionTable session={session} />}
-          {selectedMenuItem === 'Add Session' && <SessionForm onAddSession={handleAddSession} />}
+      <div ref={teacherTableRef} />
+      {selectedMenuItem === 'View Teacher' && teachers.length > 0 && <TeacherTable teachers={teachers} />}
+      <div ref={addTeacherFormRef} />
+      {selectedMenuItem === 'Add Teacher' && <TeacherForm onAddTeacher={handleAddTeacher} />}
 
-          {selectedMenuItem === 'View Program' && program.length > 0 && <ProgramTable program={program} />}
-          {selectedMenuItem === 'Add Program' && <ProgramForm onAddProgram={handleAddProgram} />}
 
-          {selectedMenuItem === 'View Available Rooms' && availableRoom.length > 0 && <AvailableTable availableRoom={availableRoom} />}
-          {selectedMenuItem === 'Add Available Rooms' && <AvailableRoomForm onAddAvailableRoom={handleAddAvailableRoom} />}
+      <div ref={departmentTableRef} />
+      {selectedMenuItem === 'View Department' && department.length > 0 && <DepartmentTable department={department} />}
 
-          {selectedMenuItem === 'View Section' && section.length > 0 && <SectionTable section={section} />}
-          {selectedMenuItem === 'Add Section' && <SectionForm onAddSection={handleAddSection} />}
+      {/*  */}
+      <div ref={addDepartmentRef} />
+     {selectedMenuItem === 'Add Department' && <DepartmentForm onAddDepartment={handleAddDepartment} />}
 
-          {selectedMenuItem === 'View Current Session' && currentSession.length > 0 && <CurrentSessionTable currentSession={currentSession} />}
-          {selectedMenuItem === 'Add Current Session' && <CurrentSessionForm onAddCurrentSession={handleAddCurrentSession} />}
-          {selectedMenuItem === 'View Offered Subject' && offeredSubject.length > 0 && <OfferedSubjectTable offeredSubject={offeredSubject} />}
-          {selectedMenuItem === 'Add Offered Subject' && <OfferedSubjectForm onAddOfferedSubject={handleAddOfferedSubject} />}
-        
-          {selectedMenuItem === 'Create Timetable' && <CreateTimeTableForm onCreateTimetable={CreateTimeTableForm} />}
+      <div ref={sessionTableRef} />
+      {selectedMenuItem === 'View Session' && session.length > 0 && <SessionTable session={session} />}
+      <div ref={addSessionRef} />
+      {selectedMenuItem === 'Add Session' && <SessionForm onAddSession={handleAddSession} />}
 
-          {selectedMenuItem === 'TeacherTableForm' && (<TeacherTableForm teachers={teachers} />)}
+      <div ref={programTableRef} />
+      {selectedMenuItem === 'View Program' && program.length > 0 && <ProgramTable program={program} />}
+      <div ref={addProgramRef} />
+      {selectedMenuItem === 'Add Program' && <ProgramForm onAddProgram={handleAddProgram} />}
 
-          {selectedMenuItem === 'View Teacher' && teachers.length > 0 && <TeacherTable teachers={teachers} />}
-            {selectedMenuItem === 'View Teacher' && TeacherTable.length > 0 && <TeacherTableForm TeacherTable={TeacherTable} />}
+      <div ref={availableRoomTableRef} />
+      {selectedMenuItem === 'View Available Rooms' && availableRoom.length > 0 && <AvailableTable availableRoom={availableRoom} />}
+      <div ref={addAvailableRoomRef} />
+      {selectedMenuItem === 'Add Available Rooms' && <AvailableRoomForm onAddAvailableRoom={handleAddAvailableRoom} />}
+
+      <div ref={sectionTableRef} />
+      {selectedMenuItem === 'View Section' && section.length > 0 && <SectionTable section={section} />}
+      <div ref={addSectionRef} />
+      {selectedMenuItem === 'Add Section' && <SectionForm onAddSection={handleAddSection} />}
+
+      <div ref={currentSessionTableRef} />
+      {selectedMenuItem === 'View Current Session' && currentSession.length > 0 && <CurrentSessionTable currentSession={currentSession} />}
+      <div ref={addCurrentSessionRef} />
+      {selectedMenuItem === 'Add Current Session' && <CurrentSessionForm onAddCurrentSession={handleAddCurrentSession} />}  
+
+      <div ref={offeredSubjectTableRef} />
+      {selectedMenuItem === 'View Offered Subject' && offeredSubject.length > 0 && <OfferedSubjectTable offeredSubject={offeredSubject} />}
+      <div ref={addOfferedSubjectRef} />
+      {selectedMenuItem === 'Add Offered Subject' && <OfferedSubjectForm onAddOfferedSubject={handleAddOfferedSubject} />}
+
+      <div ref={createTimetableRef} />
+       {selectedMenuItem === 'Create Timetable' && <CreateTimeTableForm onCreateTimetable={createTimetableRef} />}
+
+
+      <div ref={teacherTableFormRef} />
+     {selectedMenuItem === 'TeacherTableForm' && <TeacherTableForm teachers={teachers} />}
 
         </Box>
       </Box>
     </>
   );
+  
 };
 
 export default Admin;

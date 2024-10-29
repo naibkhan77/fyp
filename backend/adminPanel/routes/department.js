@@ -8,22 +8,22 @@ department.post("/adddepartment", verifyToken, (req, res) => {
     const {department_id, department_name} = req.body;
     const {error} = departmentSchema(req.body);
     if(error) 
-        res.send(error.details[0].message)
+       return  res.send(error.details[0].message)
     
-    const sql = `SELECT * FROM department WHERE department_id = '${department_id}'`
+    const sql = `SELECT * FROM department WHERE department_name = '${department_name}'`
     connection.query(sql, (err, results, fields) => {
         if(err)
             res.send(err)
         else {
             if(results.length > 0 )
-                res.send("department id is already registered....try another one")
+                res.json("department id is already registered....try another one")
             else {
                 const sql = `INSERT INTO department(department_id, department_name) VALUES ('${department_id}', '${department_name}')`
 
                 connection.query(sql, (err, results, fields) => {
                     if(err)
-                        res.send(err)
-                    res.send("Department added successfully")
+                        return res.send(err)
+                    res.json("Department added successfully")
                 })
             }
         }

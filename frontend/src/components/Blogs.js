@@ -1,11 +1,11 @@
 import React from 'react';
 
-import dep1 from '../CardImages/icpdepone.jpg'; 
-import dep2 from '../CardImages/icpdeptwo.jpg';
-import dep3 from '../CardImages/icpdepthree.jpg';
-import dep4 from '../CardImages/icpdepfour.jpg';
-import masj from '../CardImages/icpmasfive.jpg';
-import dep6 from '../CardImages/icpdepsix.jpg';
+import dep1 from '../CardImages/sir1.jpeg'; 
+import dep2 from '../CardImages/sir7.jpeg';
+import dep3 from '../CardImages/sir3.jpeg';
+import dep4 from '../CardImages/sir4.jpeg';
+import masj from '../CardImages/sir8.png';
+import dep6 from '../CardImages/sir6.jpeg';
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 
 
@@ -16,7 +16,16 @@ const Blogs = () => {
     
        {/* Add Blogs Here   */}
 
-       <Box id='blogs-section'>
+       <Box id='blogs-section'
+       
+       sx={{ 
+        mt: { xs: 4, md: 8 },  // Adding margin-top with different values for small and medium/large screens
+        flexGrow: 1, 
+        px: { xs: 2, md: 10 }, 
+        py: { xs: 2, md: 5 } 
+      }}
+    >
+
         <Typography variant="h4" component="h2" sx={{ textAlign: 'center',   mb: -4, mt: 3 }}>
           Blogs
         </Typography>
@@ -37,17 +46,19 @@ const Blogs = () => {
             <CardActionArea>
               <CardMedia
                 component="img"
-                height="140"
+                height="210"
                 image={dep1}
                 alt="green iguana"
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  Title...
+                  Dr Shaukat Ali
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over 6,000
-                  species, ranging across all continents except Antarctica
+                <Typography> 	Assistant Professor </Typography>
+                <Typography>  Computer Science </Typography>
+                <Typography >
+                  PhD (University of Peshawar)
+                  Email: shaukat@icp.edu.pk
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -69,17 +80,18 @@ const Blogs = () => {
             <CardActionArea>
               <CardMedia
                 component="img"
-                height="140"
+                height="210"
                 image={dep2}
                 alt="green iguana"
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  Titlt...
+                  Dr. Naveed Abbas
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over 6,000
-                  species, ranging across all continents except Antarctica
+                <Typography>Assistant Professor</Typography>
+                <Typography>
+                 BSCS (Double Gold Medalist), PhD 
+                 Email: naveed.abbas@icp.edu.pk
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -101,17 +113,19 @@ const Blogs = () => {
             <CardActionArea>
               <CardMedia
                 component="img"
-                height="140"
+                height="210"
                 image={dep3}
                 alt="green iguana"
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  Title...
+                Salahuddin
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over 6,000
-                  species, ranging across all continents except Antarctica
+                <Typography> 	Lecturer </Typography>
+                <Typography>  Computer Science </Typography>
+                <Typography>
+                 BSCS (Hons), MPhil
+                 Email: salahuddin@icp.edu.pk
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -133,17 +147,19 @@ const Blogs = () => {
             <CardActionArea>
               <CardMedia
                 component="img"
-                height="140"
+                height="210"
                 image={dep4}
                 alt="green iguana"
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  Title...
+                  Mansoor Nasir
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over 6,000
-                  species, ranging across all continents except Antarctica
+                <Typography> Lecturer </Typography>
+                <Typography>  Computer Science </Typography>
+                <Typography >
+                PhD (University of Peshawar)
+                Email: 
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -165,17 +181,19 @@ const Blogs = () => {
             <CardActionArea>
               <CardMedia
                 component="img"
-                height="140"
+                height="210"
                 image={masj}
                 alt="green iguana"
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  Title...
+                 Tauseef Ur Rahman	
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over 6,000
-                  species, ranging across all continents except Antarctica
+                <Typography>	Lecturer</Typography>
+                <Typography>Computer Science</Typography>
+                <Typography >
+                  MS-Web Engineering (UoP)
+                  Email: tauseef@icp.edu.pk
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -197,18 +215,20 @@ const Blogs = () => {
             <CardActionArea>
               <CardMedia
                 component="img"
-                height="140"
+                height="210"
                 image={dep6}
                 alt="green iguana"
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  Title...
+                 Usman Ali Shah
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over 6,000
-                  species, ranging across all continents except Antarctica
+                <Typography>  Lecturer </Typography>
+                <Typography>  Computer Science </Typography>
+                <Typography >
+                  PhD
                 </Typography>
+                <Typography> Email: usman@icp.edu.pk </Typography>
               </CardContent>
             </CardActionArea>
           </Card>

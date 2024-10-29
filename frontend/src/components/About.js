@@ -1,106 +1,116 @@
-import React from 'react'
-import { Box, Button, Grid, Typography } from '@mui/material'; 
-import three from '../images/icp3.jpg';
+import React from 'react';
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material'; 
+import three from '../images/icp3.jpg'; 
 import four from '../images/icp4.jpg';
 
 const About = () => {
-    return (
-        <>  
-
-      {/* AboutUs pic and text here start  */}
-
-      <Box
-       id="about-section"
-      sx={{ flexGrow: 1, px: { xs: 2, md: 10 }, py: { xs: 2, md: 5 } }}>
-
-      {/* About Us Section */}
-
+return (
+    <>  
+    {/* AboutUs Section in Card Format */}  
+    <Box
+        id="about-section"
+        sx={{ flexGrow: 1, px: { xs: 3, md: 10 }, py: { xs: 2, md: 5 }, mt: { xs: 2, md: 8 } }}
+    >
       <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <Typography variant="body1" >
-            <Typography variant='h4' textAlign='center'>
-            <p >About us</p>
-            </Typography>
-            <Typography textAlign='center'>
-            <h1>What we are doing</h1>
-            </Typography>
-            <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-              Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-              when an unknown printer took a galley of type and scrambled it to make a type
-              specimen book. It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was popularised in
-              the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-              and more recently with desktop publishing software like Aldus PageMaker including
-              versions of Lorem Ipsum.
-            </p>
-            <Button
-              variant="outlined"
-              sx={{
-                color: 'black',
-                borderColor: 'black',
-                mt: 4,
-                '&:hover': {
-                  background: 'black',
-                  color: 'white',
-                },
-              }}
-            >
-              Click me
-            </Button>
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              position: 'relative',
-              width: '100%',
-              height: 'auto',
-              borderRadius: 2,
-              filter: 'brightness(70%)',
-            }}
-          >
-            <Box
-              component="img"
-              src={three}
-              alt="Another description of images"
-              sx={{
-                width: '80%',
-                height: 'auto',
-                borderRadius: 2,
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                  boxShadow: '1.4px 20px rgba(0, 0, 0, 0.2)',
-                },
-              }}
-            />
-            <Box
-              component="img"
-              src={four}
-              alt="Overlay image description"
-              sx={{
-                position: 'absolute',
-                
-                top: '-5%',
-                left: '40%',
-                width: '55%',
-                height: 'auto',
-                borderRadius: 2,
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                  boxShadow: '1.4px 20px rgba(0, 0, 0, 0.2)',
-                },
-              }}
-            />
-          </Box>
-        </Grid>
+          <Grid item xs={12} md={6}>
+              {/* Card for Text Content */}
+
+              <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', textAlign: 'center', mb: '5px' }}>
+                        About Us
+                </Typography>
+
+              <Card
+                  sx={{ 
+                    height: '350px',  // Slightly larger height
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    justifyContent: 'center', 
+                    bgcolor: 'lightgray', 
+                    borderRadius: 3, 
+                    transition: 'transform 0.3s, box-shadow 0.3s',  // Add transition effect here
+                    '&:hover': {
+                    transform: 'scale(1.05)',  // Scale on hover
+                    boxShadow: '1.4px 20px rgba(0, 0, 0, 0.2)',  // Add box-shadow on hover
+                    },
+                  }}
+                >
+
+                  <CardContent
+                      sx={{
+                          height: '100%', 
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          textAlign: 'center',
+                      }}
+                  >
+                      
+                      <Typography variant='h4' component='div' sx={{ fontFamily:'-moz-initial' }}>
+                      "Time Table Management System"
+                      </Typography>
+                      <Box sx={{ borderBottom: '2px solid black', my: 2 }} />
+
+                      <Typography variant="body1" style={{ textAlign: 'justify', paddingTop: '8px' }} >
+                        is a web-based platform designed to simplify the process of creating and managing class schedules and room assignments. It enables administrators to efficiently allocate rooms based on class requirements, availability, and capacity. This system helps prevent scheduling conflicts, ensuring smooth and organized management of resources in educational institutions.
+                      </Typography>
+                      
+                  </CardContent>
+              </Card>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+              {/* Box for Images without Background */}
+              <Box
+                  sx={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '450px',  // Match card height
+                      display: 'flex',
+                       justifyContent: 'center',
+                      alignItems: 'center',
+                  }}
+              >
+                  {/* First Image */}
+                  <Box
+                      component="img"
+                      src={three}
+                      alt="Main image description"
+                      sx={{
+                          width: '80%',
+                          height: 'auto',
+                          borderRadius: 2,
+                          transition: 'transform 0.3s, box-shadow 0.3s',
+                          '&:hover': {
+                              transform: 'scale(1.05)',
+                              boxShadow: '1.4px 20px rgba(0, 0, 0, 0.2)',
+                          },
+                      }}
+                  />
+                  {/* Overlapping Image */}
+                  <Box
+                      component="img"
+                      src={four}
+                      alt="Overlay image description"
+                      sx={{
+                          position: 'absolute',
+                          top: '-5%',
+                          left: '40%',
+                          width: '55%',
+                          height: 'auto',
+                          borderRadius: 2,
+                          transition: 'transform 0.3s, box-shadow 0.3s',
+                          '&:hover': {
+                              transform: 'scale(1.05)',
+                              boxShadow: '1.4px 20px rgba(0, 0, 0, 0.2)',
+                          },
+                      }}
+                  />
+              </Box>
+          </Grid>
       </Grid>
-      </Box>
+    </Box>
+    </>
+);
+};
 
-        </>
-    )
-}
-
-export default About
+export default About;

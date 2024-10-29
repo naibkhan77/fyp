@@ -1,25 +1,63 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 
-const DepartmentTable = ({ department }) => {
+const DepartmentTable = ({ departments }) => {
     return (
-        <Table>
-            <TableHead> 
-                <TableRow>
-                    <TableCell>Department ID</TableCell>
-                    <TableCell>Department Name</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {department?.map((department) => (  // Use optional chaining
-                    <TableRow key={department.department_id}>
-                        <TableCell>{department.department_id}</TableCell>
-                        <TableCell>{department.department_name}</TableCell>
+        <TableContainer component={Paper} sx={{ backgroundColor: '#f5f5f5', mt: '60px' }}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell style={{ fontWeight: 'bold' }}>Department ID</TableCell>
+                        <TableCell style={{ fontWeight: 'bold' }}>Department Name</TableCell>
+                        <TableCell style={{ fontWeight: 'bold' }}>Department Code</TableCell> {/* New Column for Department Code */}
+                        <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                </TableHead>
+                <TableBody>
+                    {departments?.map((department) => (
+                        <TableRow key={department.department_id}>
+                            <TableCell
+                                sx={{
+                                    backgroundColor: '#f5f5f5',
+                                    '&:hover': {
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                    },
+                                }}
+                            >
+                                <Typography variant="body1">
+                                    {department.department_id}
+                                </Typography>
+                            </TableCell>
+                            <TableCell
+                                sx={{
+                                    backgroundColor: '#f5f5f5',
+                                    '&:hover': {
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                    },
+                                }}
+                            >
+                                {department.department_name}
+                            </TableCell>
+                            <TableCell
+                                sx={{
+                                    backgroundColor: '#f5f5f5',
+                                    '&:hover': {
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                    },
+                                }}
+                            >
+                                {department.department_code} {/* Display Department Code */}
+                            </TableCell>
+                            {/* Add any actions here if needed */}
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
-}
+};
 
 export default DepartmentTable;

@@ -10,14 +10,14 @@ const OfferedSubjectTable = ({ offeredSubject }) => {
         <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Subject ID</TableCell>
-            <TableCell>Program_Name</TableCell>
-            <TableCell>Year</TableCell>
-            <TableCell>SpringFall</TableCell>
-            <TableCell>Department_Name</TableCell>
-            <TableCell>Course_Name</TableCell>
-            <TableCell>Batch</TableCell>
-            <TableCell>Session_Name</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Subject ID</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Program_Name</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Year</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>SpringFall</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Department_Name</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Course_Name</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Batch</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Session_Name</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

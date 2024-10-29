@@ -10,14 +10,14 @@ const AvailableTable = ({availableRoom}) => {
         <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Available Room ID</TableCell>
-            <TableCell>SpringFall</TableCell>
-            <TableCell>Year</TableCell>
-            <TableCell>Room_number</TableCell>
-            <TableCell>Building</TableCell>
-            <TableCell>Department</TableCell>
-            <TableCell>Start_Time</TableCell>
-            <TableCell>End_Time</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Available Room ID</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>SpringFall</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Year</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Room_number</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Building</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Department</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Start_Time</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>End_Time</TableCell>
           </TableRow>
          </TableHead>
          <TableBody>

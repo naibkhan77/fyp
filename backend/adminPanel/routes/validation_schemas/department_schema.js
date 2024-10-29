@@ -2,8 +2,7 @@ const joi = require('joi');
 
 function department_schema(data) {
     const schema = joi.object({
-        department_id: joi.number()
-            .required(),
+        department_id: joi.number(),
         department_name: joi.string()
             .min(3)
             .max(30)

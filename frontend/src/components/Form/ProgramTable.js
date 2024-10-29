@@ -10,10 +10,10 @@ const ProgramTable = ({ program }) => {
         <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Program ID</TableCell>
-            <TableCell>Program Name</TableCell>
-            <TableCell>Credits Required</TableCell>
-            <TableCell>department_name</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Program ID</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Program Name</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Credits Required</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>department_name</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -1,81 +1,111 @@
 import React from 'react'; 
-import {Box, Button, Card, CardContent, Grid, Typography  } from '@mui/material'; 
-import {Carousel} from 'react-responsive-carousel';
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material'; 
+import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
 
 import islamia from '../images/icp.jpg';
 import three from '../images/icp3.jpg';
-import four from '../images/icp4.jpg'
+import four from '../images/icp4.jpg';
 import one from '../images/icp2.jpg';
 import About from '../components/About';
 import Blogs from '../components/Blogs';
 import Footer from '../components/Footer';
 import Timetable from '../components/Timetable';
-
-
+import pic from '../images/atifsir.jpg'; 
 
 const Home = () => {
-
   return (
     <>
-    {/* Home start  */}
-    <Box id='home-section'
+      {/* Home start */}
+      <Box 
+        id='home-section'
         sx={{
           position: 'relative', 
           width: '100%', 
           height: 'auto', 
-          pt: { xs: 10, md: 12 }, 
-          pr: { xs: 2, md: 19 }, 
+          pt: { xs: 4, md: 6 },  // Reduced padding-top
           pb: { xs: 10, md: 11 }, 
-          pl: { xs: 2, md: 17 },   
-          overflow: 'hidden',    
+          overflow: 'hidden', 
+          m: 0, // Remove default margin
         }}
       >
         <Carousel
           showArrows={true}
-          autoPlay={true}  // Enable auto play
-          infiniteLoop={true}  // Enable infinite loop
+          autoPlay={true}
+          infiniteLoop={true}
           showThumbs={false}
           showStatus={false}
-          interval={7000}  // Change slide every 3 seconds
+          interval={7000}
         >
-          <Box component="img" src={islamia} alt="description of image"
+          {/* Individual images in the carousel */}
+          <Box 
+            component="img" 
+            src={islamia} 
+            alt="Islamia College"
             sx={{
               width: '100%',
-              height: { xs: '200px', sm: '300px', md: '400px' }, 
+              height: { xs: '300px', sm: '400px', md: '600px' },  
               display: 'block',
               filter: 'brightness(50%)',
-              borderRadius: 5,
+              borderTopLeftRadius: 5, // Top radius
+              borderTopRightRadius: 5, // Top radius
+              borderBottomLeftRadius: 0, // Remove bottom radius
+              borderBottomRightRadius: 0, // Remove bottom radius
+              marginTop: '0px',  // No margin-top for less space
             }}
           />
-          <Box component="img" src={three} alt="description of second image"
+          <Box 
+            component="img" 
+            src={three} 
+            alt="Second image"
             sx={{
               width: '100%',
-              height: { xs: '200px', sm: '300px', md: '400px' },
+              height: { xs: '300px', sm: '400px', md: '600px' },  
               display: 'block',
               filter: 'brightness(50%)',
-              borderRadius: 5,
+              borderTopLeftRadius: 5, // Top radius
+              borderTopRightRadius: 5, // Top radius
+              borderBottomLeftRadius: 0, // Remove bottom radius
+              borderBottomRightRadius: 0, // Remove bottom radius
+              marginTop: '0px',  // No margin-top
             }}
           />
-          <Box component="img" src={four} alt="description of third image"
+          <Box 
+            component="img" 
+            src={four} 
+            alt="Third image"
             sx={{
               width: '100%',
-              height: { xs: '200px', sm: '300px', md: '400px' },
+              height: { xs: '300px', sm: '400px', md: '600px' },  
               display: 'block',
               filter: 'brightness(50%)',
-              borderRadius: 5,
+              borderTopLeftRadius: 5, // Top radius
+              borderTopRightRadius: 5, // Top radius
+              borderBottomLeftRadius: 0, // Remove bottom radius
+              borderBottomRightRadius: 0, // Remove bottom radius
+              marginTop: '0px',  // No margin-top
+              
             }}
           />
-          <Box component="img" src={one} alt="description of fourth image"
+          <Box 
+            component="img" 
+            src={one} 
+            alt="Fourth image"
             sx={{
               width: '100%',
-              height: { xs: '200px', sm: '300px', md: '400px' },
+              height: { xs: '300px', sm: '400px', md: '600px' },  
               display: 'block',
               filter: 'brightness(50%)',
-              borderRadius: 5,
+              borderTopLeftRadius: 5, // Top radius
+              borderTopRightRadius: 5, // Top radius
+              borderBottomLeftRadius: 0, // Remove bottom radius
+              borderBottomRightRadius: 0, // Remove bottom radius
+              marginTop: '0px',  // No margin-top
             }}
           />
         </Carousel>
+
+        {/* Overlay text for the carousel */}
         <Box
           sx={{
             position: 'absolute',
@@ -88,6 +118,7 @@ const Home = () => {
             width: '80%', 
             maxWidth: '600px',
             borderRadius: '8px', 
+            
           }}
         >
           <Typography variant="h3"
@@ -100,56 +131,90 @@ const Home = () => {
               lineHeight: '1.2', 
             }}
           >
-            <Box component='span' sx={{ color: 'gold' }} >
-              Welcome
-            </Box> {' '}
+            <Box component='span' sx={{ whiteSpace: 'nowrap' }}>
+            <Box component='span'>Welcome</Box> {' '}
             to {' '}
             <Box component='span' sx={{ color: 'gold' }}>
-              Islamia
+              Islamia College
             </Box>
+          </Box>
+
           </Typography>
         </Box>
       </Box>
-    {/* Home end  */}
+      {/* Home end */}
 
-{/* card and pic  */}
-    <Box sx={{ flexGrow: 1, px:{ xs:3, md: 10 }, py: { xs: -1, md: 1 } }}>
-         <Grid container spacing={4}>
- {/* card */}
-           <Grid item xs={12} md={6}>
-             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', bgcolor: 'lightgray', borderRadius: 3, }}>
-               <CardContent>
-                 <Typography variant="h4" component="div">
-                   Card Title
-                 </Typography>
-                 <Typography variant="body2" >
-                   Card content goes here. You can describe something about the image or provide other relevant information.
-                   Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-               </Typography>
-                 <Button variant='outlined'
-                  sx={{ color: 'black', borderColor: 'black', mt: 2, 
+      {/* Card and image section */}
+      <Box sx={{ flexGrow: 1, px: { xs: 3, md: 10 }, py: { xs: -1, md: 1 } }}>
+        <Grid container spacing={4}>
+          {/* Card */}
+          <Grid item xs={12} md={6}>
+            <Card 
+              sx={{ 
+                height: '450px',  // Slightly larger height
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'center', 
+                bgcolor: 'lightgray', 
+                borderRadius: 3, 
+                transition: 'transform 0.3s, box-shadow 0.3s',  // Add transition effect here
                     '&:hover': {
-                        background: 'black', 
-                        color: 'white',
-                    }
-                  }}
-                >
-                  Click me
-                </Button>
+                    transform: 'scale(1.05)',  // Scale on hover
+                    boxShadow: '1.4px 20px rgba(0, 0, 0, 0.2)',  // Add box-shadow on hover
+                    },
+              }}
+            >
+              <CardContent
+                sx={{
+                  height: '100%',  // Set equal height to match the image
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
+                  CHAIRMAN
+                </Typography>
+                <Typography variant="body2">
+                  <Typography variant='h5' sx={{ fontWeight: 'bold', fontFamily:'-moz-initial'}}>
+                    Dr. Atif Khan
+                  </Typography>
+                  <Typography vairant='body2'  sx={{ fontWeight: 'bold', fontSize: '22px', fontFamily:'-moz-initial'}}>
+                  Department of Computer Science
+                  Islamia College 
+                  </Typography>
+                  <Typography style={{ textAlign: 'justify', paddingTop: '8px' }}>
+                  Welcome to our Timetable Management System. This platform represents our commitment to using technology to make scheduling efficient, accessible, and adaptable for all. By streamlining timetables, we aim to reduce conflicts and enhance productivity for students, faculty, and staff alike. We encourage everyone to make full use of this tool, as we strive to create a more organized and connected environment
+                  </Typography>
+                </Typography>
+                
+                <Box sx={{ borderBottom: '2px solid black', my: 2 }} />
+
+                <Typography style={{ fontWeight: 'bold' }}>Email: atifkhan@icp.edu.pk</Typography>
+                <Typography style={{ fontWeight: 'bold' }}>Cell No: +923339257326</Typography>
+                
               </CardContent>
             </Card>
           </Grid>
-{/* picture */}
+
+          {/* Image */}
           <Grid item xs={12} md={6}>
             <Box
-              component="img"
-              src={one}
+                component="img"
+              src={pic}
               alt="Another description of image"
               sx={{
                 width: '100%',
-                height: 'auto',
+                height: '450px',  // Larger height to match the card
+                objectFit: 'cover',  // Ensure image covers the container
                 borderRadius: 3,
-                filter: 'brightness(70%)'
+                filter: 'brightness(100%)',  
+                transition: 'transform 0.3s, box-shadow 0.3s',  // Add transition effect here
+                    '&:hover': {
+                    transform: 'scale(1.05)',  // Scale on hover
+                    boxShadow: '1.4px 20px rgba(0, 0, 0, 0.2)',  // Add box-shadow on hover
+                    },
               }}
             />
           </Grid>
@@ -157,25 +222,17 @@ const Home = () => {
       </Box>
       {/* End of card and image section */}
       
-
-      {/* render about component here */}
+      {/* Render additional components */}
       <About />  
-
-      {/* render Timetable component here */}
       <Timetable />
-
-      {/* render blogs component here */}
       <Blogs />
 
-      {/* render Footer here  */}
-
-     <Box sx={{pt: 4}}>
-      <Footer /> 
-     </Box>
-
-
+      {/* Render Footer */}
+      <Box sx={{ pt: 4 }}>
+        <Footer /> 
+      </Box>
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;
